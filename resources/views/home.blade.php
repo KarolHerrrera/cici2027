@@ -18,9 +18,10 @@
         <p class="hero__dates">{{ $evento['fechas'] }}</p>
         <p class="hero__lead">{{ $evento['lema'] }}</p>
 
-        <div class="hero__actions">
-            <a href="{{ $enlaces['inscripciones'] }}" class="btn btn--accent" target="_blank" rel="noopener">Inscribirme</a>
-            <a href="#convocatoria" class="btn btn--ghost">Enviar resumen</a>
+        <div class="hero__actions" style="max-width: 680px;">
+            <a href="{{ $enlaces['inscripciones'] }}" class="btn btn--accent" target="_blank" rel="noopener">Inscribirme (U. Mariana)</a>
+            <a href="{{ $enlaces['resumenes'] }}" class="btn btn--light">Postular resumen</a>
+            <a href="{{ route('submissions.status') }}" class="btn btn--ghost">Consultar con mi cédula</a>
         </div>
     </div>
 </section>
@@ -43,7 +44,7 @@
         </div>
         <div class="facts__item">
             <span class="facts__label">Cierre de resúmenes</span>
-            <strong>{{ $fechas[1]['fecha'] }}</strong>
+            <strong>{{ $evento['cierre_resumenes'] }}</strong>
         </div>
         <div class="facts__item">
             <span class="facts__label">Organiza</span>
@@ -108,7 +109,14 @@
                         {{ $eje['titulo'] }}
                         @if ($eje['transversal'])<span class="pill">Transversal</span>@endif
                     </h3>
-                    <span class="axes__lines">{{ $eje['lineas'] }} líneas temáticas</span>
+                    <span class="axes__lines">{{ $eje['lineas'] }} {{ $eje['lineas'] === 1 ? 'línea temática' : 'líneas temáticas' }}</span>
+                    @if (!empty($eje['temas']))
+                        <div class="axes__topics">
+                            @foreach ($eje['temas'] as $tema)
+                                <span class="axes__topic-tag">{{ $tema }}</span>
+                            @endforeach
+                        </div>
+                    @endif
                 </li>
             @endforeach
         </ol>
@@ -118,20 +126,29 @@
 {{-- ================= PONENTES ================= --}}
 <section class="section section--alt" id="ponentes">
     <div class="container">
-        <x-section-title title="Ponentes invitados"
+        <x-section-title title="Ponentes magistrales invitados"
             subtitle="Investigadores y profesionales de Colombia, México, Estados Unidos y Ecuador." />
 
         <div class="grid grid--3">
             @foreach ($ponentes as $p)
                 <article class="card speaker">
-                    {{-- Cuando haya foto: <img src="{{ asset('storage/'.$p->photo) }}" alt="Foto de {{ $p->name }}"> --}}
-                    <div class="speaker__avatar" aria-hidden="true">
-                        {{ collect(explode(' ', preg_replace('/^(Dr\.|Dra\.|Ing\.)\s+/', '', $p['nombre'])))->take(2)->map(fn ($w) => mb_substr($w, 0, 1))->implode('') }}
-                    </div>
+                    @if (!empty($p['foto']))
+                        <img class="speaker__photo" src="{{ asset('storage/'.$p['foto']) }}" alt="Foto de {{ $p['nombre'] }}">
+                    @else
+                        <div class="speaker__avatar" aria-hidden="true">
+                            {{ collect(explode(' ', preg_replace('/^(Dr\.|Dra\.|Ing\.|Mg\.|Ph\.D\.)\s+/', '', $p['nombre'])))->take(2)->map(fn ($w) => mb_substr($w, 0, 1))->implode('') }}
+                        </div>
+                    @endif
                     <span class="speaker__country">{{ $p['pais'] }}</span>
                     <h3>{{ $p['nombre'] }}</h3>
                     <p class="speaker__area">{{ $p['area'] }}</p>
-                    <p class="card__meta">{{ $p['institucion'] }}<br>{{ $p['ciudad'] }}</p>
+                    @if (!empty($p['cargo']))
+                        <p class="card__meta">{{ $p['cargo'] }}</p>
+                    @endif
+                    <p class="card__meta">{{ $p['institucion'] }}@if (!empty($p['ciudad']))<br>{{ $p['ciudad'] }}@endif</p>
+                    @if (!empty($p['charla']))
+                        <p class="card__meta" style="margin-top:.6rem; font-style:italic; color:var(--tinta);">«{{ $p['charla'] }}»</p>
+                    @endif
                 </article>
             @endforeach
         </div>
@@ -161,7 +178,7 @@
 <section class="section" id="inscripciones">
     <div class="container">
         <x-section-title title="Inscripciones"
-            subtitle="El pago se realiza por proyecto. Valores en pesos colombianos." />
+            subtitle="La inscripción oficial al congreso se realiza con la Universidad Mariana. El pago se realiza por proyecto (valores en pesos colombianos)." />
 
         <div class="grid grid--4 prices">
             @foreach ($tarifas as $t)
@@ -174,8 +191,9 @@
             @endforeach
         </div>
 
-        <div class="actions">
-            <a href="{{ $enlaces['inscripciones'] }}" class="btn btn--primary" target="_blank" rel="noopener">Realizar inscripción</a>
+        <div class="actions" style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+            <a href="{{ $enlaces['inscripciones'] }}" class="btn btn--primary" target="_blank" rel="noopener">Inscribirse en Universidad Mariana</a>
+            <a href="{{ $enlaces['resumenes'] }}" class="btn btn--outline">Postularme como ponente (Enviar resumen)</a>
         </div>
     </div>
 </section>
@@ -184,18 +202,21 @@
 <section class="cta" id="convocatoria">
     <div class="container cta__inner">
         <div>
-            <h2>Envía tu resumen</h2>
-            <p>La recepción de resúmenes va del 1 de octubre de 2026 al 26 de febrero de 2027.</p>
+            <h2>Postulación de ponencias y pósteres</h2>
+            <p>Envía tu resumen para evaluación del Comité Científico. Si ya lo enviaste, consulta con tu número de cédula si fue aprobado en modalidad oral o póster y descarga la plantilla correspondiente.</p>
         </div>
-        <a href="{{ $enlaces['resumenes'] }}" class="btn btn--light" target="_blank" rel="noopener">Enviar resumen</a>
+        <div style="display:flex; flex-wrap:wrap; gap:.85rem; flex-shrink:0;">
+            <a href="{{ $enlaces['resumenes'] }}" class="btn btn--light">Enviar resumen</a>
+            <a href="{{ route('submissions.status') }}" class="btn btn--ghost">Consultar con mi cédula</a>
+        </div>
     </div>
 </section>
 
 {{-- ================= DOCUMENTOS ================= --}}
 <section class="section" id="documentos">
     <div class="container container--narrow">
-        <x-section-title title="Documentos"
-            subtitle="Formatos y materiales oficiales del congreso." />
+        <x-section-title title="Documentos y plantillas"
+            subtitle="Formatos oficiales de resumen, plantilla de póster y términos de referencia del congreso." />
 
         <ul class="docs">
             @foreach ($documentos as $d)
@@ -205,7 +226,7 @@
                         <span class="docs__title">{{ $d['titulo'] }}</span>
                     </div>
                     @if ($d['url'])
-                        <a href="{{ $d['url'] }}" class="btn btn--outline btn--sm" target="_blank" rel="noopener">Abrir</a>
+                        <a href="{{ $d['url'] }}" class="btn btn--outline btn--sm">Ver / Descargar</a>
                     @else
                         <span class="badge">Próximamente</span>
                     @endif

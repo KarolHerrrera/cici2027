@@ -29,8 +29,9 @@
                 @foreach ($links as $ancla => $texto)
                     <li><a href="{{ route('home') }}#{{ $ancla }}">{{ $texto }}</a></li>
                 @endforeach
+                <li><a href="{{ route('submissions.status') }}">Estado resumen</a></li>
             </ul>
-            <a href="{{ route('home') }}#convocatoria" class="btn btn--primary btn--sm">Enviar resumen</a>
+            <a href="{{ route('submissions.public.create') }}" class="btn btn--primary btn--sm">Enviar resumen</a>
         </nav>
     </div>
 </header>
