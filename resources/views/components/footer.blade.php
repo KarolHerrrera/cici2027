@@ -7,12 +7,13 @@
         </div>
 
         <div>
-            <h3 class="footer__title">Congreso</h3>
+            <h3 class="footer__title">Congreso y Ponencias</h3>
             <ul class="footer__list">
                 <li>14, 15 y 16 de abril de 2027</li>
-                <li>Presencial y virtual</li>
-                <li><a href="{{ route('home') }}#inscripciones">Inscripciones</a></li>
-                <li><a href="{{ route('home') }}#documentos">Documentos</a></li>
+                <li><a href="{{ route('submissions.public.create') }}">Postular y enviar resumen</a></li>
+                <li><a href="{{ route('submissions.status') }}">Consultar estado con cédula</a></li>
+                <li><a href="{{ route('home') }}#inscripciones">Inscripciones (Universidad Mariana)</a></li>
+                <li><a href="{{ route('home') }}#documentos">Formatos y plantillas oficiales</a></li>
             </ul>
         </div>
 
@@ -29,7 +30,16 @@
     <div class="footer__bottom">
         <div class="container footer__bottom-inner">
             <span>© {{ date('Y') }} Universidad Mariana · CICI 2027</span>
-            <a href="{{ route('login') }}">Acceso administrador</a>
+            <div style="display:flex; gap:1.25rem; flex-wrap:wrap;">
+                <a href="{{ route('submissions.status') }}">Consultar estado de resumen</a>
+                @auth
+                    <a href="{{ Auth::user()->is_admin ? route('admin.dashboard') : route('committee.submissions.index') }}">
+                        Ir al panel ({{ Auth::user()->roleLabel() }})
+                    </a>
+                @else
+                    <a href="{{ route('login') }}">Acceso Comité Científico / Administración</a>
+                @endauth
+            </div>
         </div>
     </div>
 </footer>
