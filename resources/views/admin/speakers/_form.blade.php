@@ -70,13 +70,19 @@
     </div>
 
     <div>
-        <x-input-label for="photo" value="Foto (JPG, PNG o WEBP, máximo 2 MB)" />
-        @if ($speaker->photo)
-            <img src="{{ asset('storage/'.$speaker->photo) }}" alt="Foto actual de {{ $speaker->name }}"
+        <x-input-label for="photo" value="Subir foto desde tu equipo (JPG, PNG o WEBP, máx. 2 MB)" />
+        @if ($speaker->photoUrl())
+            <img src="{{ $speaker->photoUrl() }}" alt="Foto actual de {{ $speaker->name }}"
                  class="mt-2 h-20 w-20 rounded-full object-cover">
         @endif
         <input id="photo" name="photo" type="file" accept="image/*" class="mt-2 block w-full text-sm text-gray-700">
         <x-input-error :messages="$errors->get('photo')" class="mt-2" />
+
+        <div class="mt-3">
+            <x-input-label for="photo_url" value="O pegar URL directa de Bucket (Firebase Storage / S3 / Nube)" />
+            <x-text-input id="photo_url" name="photo_url" type="url" placeholder="https://firebasestorage.googleapis.com/..." class="mt-1 block w-full text-sm" :value="old('photo_url', ($speaker->photo && str_starts_with($speaker->photo, 'http')) ? $speaker->photo : '')" />
+            <x-input-error :messages="$errors->get('photo_url')" class="mt-2" />
+        </div>
     </div>
 </div>
 

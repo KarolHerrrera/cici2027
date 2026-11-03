@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ThematicAxisSeeder::class,
             SpeakerSeeder::class,
             ImportantDateSeeder::class,
+            CongressContentSeeder::class,
         ]);
 
         $civilAxis = ThematicAxis::where('name', 'like', '%infraestructura%')->first();

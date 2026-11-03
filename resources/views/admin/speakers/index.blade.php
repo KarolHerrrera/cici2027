@@ -32,8 +32,8 @@
                             <tr>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        @if ($speaker->photo)
-                                            <img src="{{ asset('storage/'.$speaker->photo) }}" alt="Foto de {{ $speaker->name }}"
+                                        @if ($speaker->photoUrl())
+                                            <img src="{{ $speaker->photoUrl() }}" alt="Foto de {{ $speaker->name }}"
                                                  class="h-10 w-10 rounded-full object-cover">
                                         @else
                                             <div class="h-10 w-10 rounded-full bg-gray-200"></div>

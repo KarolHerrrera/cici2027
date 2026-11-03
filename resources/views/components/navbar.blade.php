@@ -8,15 +8,19 @@
         'programa'      => 'Programa',
         'inscripciones' => 'Inscripciones',
         'documentos'    => 'Documentos',
+        'noticias'      => 'Noticias',
         'contacto'      => 'Contacto',
     ];
+    $resumenUrl = \App\Models\CongressSetting::getValue('abstract_form_url', config('cici.abstract_form_url')) ?: route('submissions.public.create');
+    $resumenExt = (bool) \App\Models\CongressSetting::getValue('abstract_form_url', config('cici.abstract_form_url'));
+    $anioEvento = \App\Models\CongressSetting::getValue('event_year', '2027');
 @endphp
 
 <header class="navbar" id="navbar">
     <div class="container navbar__inner">
-        <a href="{{ route('home') }}#inicio" class="navbar__brand" aria-label="CICI 2027, ir al inicio">
+        <a href="{{ route('home') }}#inicio" class="navbar__brand" aria-label="CICI {{ $anioEvento }}, ir al inicio">
             <img src="{{ asset('images/cici-sigla.png') }}" alt="CICI" width="624" height="323">
-            <span class="navbar__year">2027</span>
+            <span class="navbar__year">{{ $anioEvento }}</span>
         </a>
 
         <button class="navbar__toggle" id="navToggle" type="button"
@@ -31,7 +35,9 @@
                 @endforeach
                 <li><a href="{{ route('submissions.status') }}">Estado resumen</a></li>
             </ul>
-            <a href="{{ route('submissions.public.create') }}" class="btn btn--primary btn--sm">Enviar resumen</a>
+            <a href="{{ $resumenUrl }}"
+               @if ($resumenExt) target="_blank" rel="noopener" @endif
+               class="btn btn--primary btn--sm">Enviar resumen</a>
         </nav>
     </div>
 </header>

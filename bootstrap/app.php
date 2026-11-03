@@ -10,11 +10,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-   ->withMiddleware(function (Middleware $middleware): void {
-    $middleware->alias([
-        'admin' => \App\Http\Middleware\IsAdmin::class,
-        'reviewer' => \App\Http\Middleware\CanReviewSubmissions::class,
-    ]);
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\SecurityHeaders::class,
+        ]);
+
+        $middleware->alias([
+            'admin'    => \App\Http\Middleware\IsAdmin::class,
+            'reviewer' => \App\Http\Middleware\CanReviewSubmissions::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -105,6 +105,42 @@
                             <p class="mt-1 text-sm text-gray-600">Administrar el cronograma oficial de recepción de resúmenes, resultados y realización del evento.</p>
                         </a>
 
+                        <a href="{{ route('admin.schedule.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-cyan-50 text-cyan-700 rounded-full mb-2">{{ \App\Models\ScheduleItem::count() }} Actividades</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Programa y Agenda Académica</h3>
+                            <p class="mt-1 text-sm text-gray-600">Gestionar horarios, conferencias magistrales, sesiones paralelas de ponencias y muestras de pósteres.</p>
+                        </a>
+
+                        <a href="{{ route('admin.documents.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-teal-50 text-teal-700 rounded-full mb-2">{{ \App\Models\CongressDocument::count() }} Documentos</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Documentos y Plantillas</h3>
+                            <p class="mt-1 text-sm text-gray-600">Subir o actualizar el Formato de Resumen, la Plantilla de Póster, la Convocatoria y recursos de difusión.</p>
+                        </a>
+
+                        <a href="{{ route('admin.news.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-rose-50 text-rose-700 rounded-full mb-2">{{ \App\Models\NewsPost::count() }} Noticias</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Noticias y Comunicados</h3>
+                            <p class="mt-1 text-sm text-gray-600">Publicar novedades oficiales, anuncios de la convocatoria y avisos para ponentes y asistentes.</p>
+                        </a>
+
+                        <a href="{{ route('admin.settings.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-orange-50 text-orange-800 rounded-full mb-2">{{ \App\Models\RegistrationFee::count() }} Tarifas</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Configuración, Enlaces y Tarifas</h3>
+                            <p class="mt-1 text-sm text-gray-600">Editar información general del evento, enlaces de formularios/inscripción y tarifas oficiales.</p>
+                        </a>
+
+                        <a href="{{ route('admin.portal.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 rounded-full mb-2">{{ \App\Models\Faq::count() }} FAQs · {{ \App\Models\Sponsor::count() }} Aliados</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Comité, Histórico, Aliados y FAQ</h3>
+                            <p class="mt-1 text-sm text-gray-600">Administrar el comité organizador público, galería de ediciones anteriores, universidades aliadas y preguntas frecuentes.</p>
+                        </a>
+
+                        <a href="{{ route('admin.messages.index') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
+                            <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-amber-50 text-amber-800 rounded-full mb-2">{{ \App\Models\ContactMessage::where('status', 'nuevo')->count() }} Nuevos</span>
+                            <h3 class="font-semibold text-lg text-gray-900">Mensajes de Contacto</h3>
+                            <p class="mt-1 text-sm text-gray-600">Revisar y dar seguimiento a las consultas enviadas desde el formulario público de contacto.</p>
+                        </a>
+
                         <a href="{{ route('submissions.status') }}" class="block bg-white shadow-sm sm:rounded-lg p-6 border border-gray-100 hover:border-indigo-400 hover:shadow-md transition">
                             <span class="inline-block px-2.5 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-full mb-2">Vista del Postulante</span>
                             <h3 class="font-semibold text-lg text-gray-900">Consulta por Cédula</h3>
