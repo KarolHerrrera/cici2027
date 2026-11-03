@@ -31,12 +31,8 @@ class SubmissionReviewed extends Notification
         if ($s->status === Submission::STATUS_APPROVED) {
             $mail->line('**Dictamen:** APROBADO en modalidad de **'.($s->modalityLabel() ?? 'participación').'**.');
 
-            if ($s->isPoster()) {
-                $posterUrl = config('cici.poster_template_url') ?: route('documents.show', 'plantilla-poster');
-                $mail->line('Tu propuesta fue aprobada en modalidad **Póster**. Desde la consulta de estado podrás descargar la plantilla oficial de póster científico ('.$posterUrl.').');
-            } elseif ($s->isOral()) {
-                $oralUrl = config('cici.oral_template_url') ?: route('documents.show', 'plantilla-oral');
-                $mail->line('Tu propuesta fue aprobada en modalidad **Ponencia oral**. Desde la consulta de estado podrás descargar la plantilla y guía de presentación ('.$oralUrl.').');
+            if ($s->isPoster() && config('cici.poster_template_url')) {
+                $mail->line('Tu propuesta fue aprobada en modalidad **Póster**. Puedes descargar la plantilla oficial desde la consulta de estado ('.config('cici.poster_template_url').').');
             }
         } else {
             $mail->line('**Dictamen:** NO APROBADO en esta convocatoria.');
@@ -52,6 +48,6 @@ class SubmissionReviewed extends Notification
 
         return $mail
             ->action('Consultar estado con mi cédula', route('submissions.status', ['documento' => $s->document]))
-            ->line('Recuerda que puedes consultar en cualquier momento el estado y descargar los formatos ingresando únicamente tu número de cédula ('.$s->document.') o código de radicado ('.$s->tracking_code.').');
+            ->line('Recuerda que puedes consultar el estado ingresando tu número de cédula ('.$s->document.') o código de radicado ('.$s->tracking_code.').');
     }
 }

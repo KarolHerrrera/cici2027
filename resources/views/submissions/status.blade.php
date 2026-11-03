@@ -7,7 +7,7 @@
     <div class="container">
         <span class="page-hero__kicker">Consulta de postulantes · CICI 2027</span>
         <h1>Estado de tu resumen</h1>
-        <p>Ingresa tu número de cédula (o el código de radicado) para consultar el dictamen del Comité Científico, ver la modalidad aprobada y descargar la plantilla correspondiente.</p>
+        <p>Ingresa tu número de cédula (o el código de radicado) para consultar el dictamen del Comité Científico y la modalidad aprobada.</p>
     </div>
 </div>
 
@@ -157,32 +157,49 @@
                         </div>
                     @endif
 
-                    {{-- Si fue aprobado como PÓSTER: descarga directa de la plantilla de póster --}}
+                    {{-- Si fue aprobado como PÓSTER --}}
                     @if ($s->isPoster())
+                        @php
+                            $posterDoc = \Illuminate\Support\Facades\Schema::hasTable('congress_documents')
+                                ? \App\Models\CongressDocument::where('slug', 'plantilla-poster')->first()
+                                : null;
+                            $posterUrl = ($posterDoc && $posterDoc->isAvailable())
+                                ? $posterDoc->downloadUrl()
+                                : (\App\Models\CongressSetting::getValue('poster_template_url') ?: config('cici.poster_template_url'));
+                        @endphp
                         <div class="status-box-action">
                             <div>
                                 <strong style="display:block; color:#065f46; font-size:1.05rem;">
                                     ¡Tu resumen fue aprobado en modalidad PÓSTER!
                                 </strong>
                                 <span style="font-size:.92rem; color:var(--texto);">
-                                    Descarga ahora la plantilla oficial de póster científico (90 × 120 cm) para preparar tu presentación y realiza tu inscripción con la Universidad Mariana.
+                                    @if ($posterUrl)
+                                        Descarga la plantilla oficial de póster y realiza tu inscripción con la Universidad Mariana.
+                                    @else
+                                        La plantilla oficial de póster estará disponible próximamente en esta sección. Ya puedes continuar con tu inscripción en la Universidad Mariana.
+                                    @endif
                                 </span>
                             </div>
-                            <div style="display:flex; flex-wrap:wrap; gap:.6rem; flex-shrink:0;">
-                                <a class="btn btn--accent btn--sm"
-                                   href="{{ config('cici.poster_template_url') ?: route('documents.show', 'plantilla-poster') }}">
-                                    Descargar plantilla de póster
-                                </a>
+                            <div style="display:flex; flex-wrap:wrap; gap:.6rem; flex-shrink:0; align-items:center;">
+                                @if ($posterUrl)
+                                    <a class="btn btn--accent btn--sm"
+                                       href="{{ $posterUrl }}"
+                                       target="_blank" rel="noopener">
+                                        Descargar plantilla de póster
+                                    </a>
+                                @else
+                                    <span class="badge">Plantilla de póster: próximamente</span>
+                                @endif
                                 <a class="btn btn--primary btn--sm"
-                                   href="https://fenix.umariana.edu.co/sgacampus/services/inscripciones/home"
+                                   href="{{ config('cici.registration_url') }}"
                                    target="_blank" rel="noopener">
-                                    Ir a inscripción (U. Mariana)
+                                    Realizar inscripción (U. Mariana)
                                 </a>
                             </div>
                         </div>
                     @endif
 
-                    {{-- Si fue aprobado como PONENCIA ORAL: descarga de plantilla oral --}}
+                    {{-- Si fue aprobado como PONENCIA ORAL --}}
                     @if ($s->isOral())
                         <div class="status-box-action">
                             <div>
@@ -190,18 +207,14 @@
                                     ¡Tu resumen fue aprobado en modalidad PONENCIA ORAL!
                                 </strong>
                                 <span style="font-size:.92rem; color:var(--texto);">
-                                    Descarga la guía y plantilla de diapositivas para ponencia oral y formaliza tu inscripción con la Universidad Mariana.
+                                    Formaliza tu inscripción al congreso a través del portal de la Universidad Mariana.
                                 </span>
                             </div>
                             <div style="display:flex; flex-wrap:wrap; gap:.6rem; flex-shrink:0;">
                                 <a class="btn btn--primary btn--sm"
-                                   href="{{ config('cici.oral_template_url') ?: route('documents.show', 'plantilla-oral') }}">
-                                    Descargar plantilla de ponencia oral
-                                </a>
-                                <a class="btn btn--outline btn--sm"
-                                   href="https://fenix.umariana.edu.co/sgacampus/services/inscripciones/home"
+                                   href="{{ config('cici.registration_url') }}"
                                    target="_blank" rel="noopener">
-                                    Ir a inscripción (U. Mariana)
+                                    Realizar inscripción (U. Mariana)
                                 </a>
                             </div>
                         </div>
@@ -211,24 +224,16 @@
                 <div class="form-card" style="text-align: center;">
                     <h2 style="font-size: 1.25rem; margin-bottom: .5rem;">No encontramos resúmenes registrados con «{{ $searchedDoc }}»</h2>
                     <p style="color: var(--suave); max-width: 520px; margin: 0 auto 1.25rem;">
-                        Verifica que hayas escrito tu número de cédula sin errores, o postula tu resumen si aún no lo has enviado.
+                        Verifica que hayas escrito tu número de cédula sin errores. Si enviaste tu resumen por el formulario oficial recientemente, pronto será registrado por el Comité Científico.
                     </p>
-                    <a href="{{ route('submissions.public.create') }}" class="btn btn--primary btn--sm">
-                        Postular y enviar mi resumen
+                    <a href="{{ config('cici.abstract_form_url') ?: route('submissions.public.create') }}"
+                       @if (config('cici.abstract_form_url')) target="_blank" rel="noopener" @endif
+                       class="btn btn--primary btn--sm">
+                        Ir al formulario de envío de resumen
                     </a>
                 </div>
             @endforelse
         @endif
-
-        <div class="card" style="margin-top: 1.5rem; background: var(--fondo); border: 1px dashed var(--borde);">
-            <h3 style="font-size: 1rem; margin-bottom: .35rem;">Cédulas de demostración disponibles para probar</h3>
-            <p style="font-size: .9rem; color: var(--suave); margin: 0;">
-                Puedes probar la consulta instantánea con las siguientes cédulas de ejemplo cargadas en el sistema:
-                <a href="{{ route('submissions.status', ['documento' => '1085200101']) }}"><strong>1085200101</strong> (Aprobado como Póster)</a> ·
-                <a href="{{ route('submissions.status', ['documento' => '1085200202']) }}"><strong>1085200202</strong> (Aprobado como Ponencia Oral)</a> ·
-                <a href="{{ route('submissions.status', ['documento' => '1085200303']) }}"><strong>1085200303</strong> (En evaluación)</a>
-            </p>
-        </div>
     </div>
 </section>
 @endsection

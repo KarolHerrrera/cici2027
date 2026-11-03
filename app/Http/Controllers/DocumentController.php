@@ -2,56 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ImportantDate;
-use App\Models\ThematicAxis;
+use App\Models\CongressDocument;
+use App\Models\CongressSetting;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class DocumentController extends Controller
 {
-    public function show(string $slug): View
+    public function show(string $slug): View|RedirectResponse
     {
-        $axes = ThematicAxis::with('topics')->orderBy('sort_order')->get();
-        $dates = ImportantDate::orderBy('date')->get();
+        // Si existe el documento administrable en BD con archivo o URL activa, redirigir a su descarga
+        if ($slug !== 'material-difusion' && Schema::hasTable('congress_documents')) {
+            $docModel = CongressDocument::where('slug', $slug)->first();
+            if ($docModel && $docModel->isAvailable() && $docModel->downloadUrl()) {
+                return redirect()->away($docModel->downloadUrl());
+            }
+        }
 
-        $documents = [
-            'convocatoria' => [
-                'title'    => 'Convocatoria y Términos de Referencia · CICI 2027',
-                'type'     => 'Convocatoria Oficial',
-                'subtitle' => 'IV Congreso Internacional de Ciencia e Ingeniería · Facultad de Ingeniería, Universidad Mariana',
-                'slug'     => 'convocatoria',
-            ],
-            'formato-resumen' => [
-                'title'    => 'Formato Oficial de Resumen · CICI 2027',
-                'type'     => 'Formato de Postulación',
-                'subtitle' => 'Estructura y guía para la presentación de resúmenes de ponencia oral o póster',
-                'slug'     => 'formato-resumen',
-            ],
-            'plantilla-poster' => [
-                'title'    => 'Plantilla y Guía Oficial de Póster Científico · CICI 2027',
-                'type'     => 'Plantilla para Trabajos Aprobados en Modalidad Póster',
-                'subtitle' => 'Especificaciones técnicas, dimensiones (90 × 120 cm) y estructura visual para expositores en modalidad póster',
-                'slug'     => 'plantilla-poster',
-            ],
-            'plantilla-oral' => [
-                'title'    => 'Guía y Plantilla de Ponencia Oral · CICI 2027',
-                'type'     => 'Plantilla para Trabajos Aprobados en Modalidad Ponencia Oral',
-                'subtitle' => 'Lineamientos de presentación (15 min exposición + 5 min preguntas) y estructura de diapositivas',
-                'slug'     => 'plantilla-oral',
-            ],
-            'material-difusion' => [
-                'title'    => 'Material e Identidad Visual de Difusión · CICI 2027',
-                'type'     => 'Material de Difusión',
-                'subtitle' => 'Piezas gráficas, logos y recursos institucionales del IV Congreso Internacional de Ciencia e Ingeniería',
-                'slug'     => 'material-difusion',
-            ],
-        ];
+        if ($slug === 'formato-resumen') {
+            $url = CongressSetting::getValue('abstract_template_url', config('cici.abstract_template_url'));
+            if ($url) {
+                return redirect()->away($url);
+            }
+        }
 
-        abort_unless(isset($documents[$slug]), 404);
+        if ($slug === 'plantilla-poster') {
+            $url = CongressSetting::getValue('poster_template_url', config('cici.poster_template_url'));
+            if ($url) {
+                return redirect()->away($url);
+            }
+        }
+
+        if ($slug === 'convocatoria') {
+            $url = CongressSetting::getValue('terms_url', config('cici.terms_url'));
+            if ($url) {
+                return redirect()->away($url);
+            }
+        }
+
+        abort_unless($slug === 'material-difusion', 404);
 
         return view('documents.show', [
-            'doc'   => $documents[$slug],
-            'axes'  => $axes,
-            'dates' => $dates,
+            'doc' => [
+                'title'    => 'Material de Difusión Oficial · CICI 2027',
+                'type'     => 'Recursos Oficiales',
+                'subtitle' => 'Descarga las piezas gráficas oficiales del CICI 2027 para difusión institucional y redes sociales.',
+                'slug'     => 'material-difusion',
+            ],
         ]);
     }
 }

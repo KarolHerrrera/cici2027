@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\AxisTopic;
 use App\Models\ThematicAxis;
 use Illuminate\Database\Seeder;
 
+/**
+ * Ejes y líneas temáticas. Datos tomados del sitio oficial https://cici.umariana.edu.co/
+ * Los ejes se identifican por su posición (sort_order) para poder renombrarlos sin duplicarlos.
+ */
 class ThematicAxisSeeder extends Seeder
 {
     public function run(): void
@@ -15,84 +18,84 @@ class ThematicAxisSeeder extends Seeder
                 'name'        => 'Diseño, Gestión, Innovación y Optimización de Procesos',
                 'transversal' => false,
                 'topics'      => [
-                    'Ingeniería de bioprocesos y agroindustria',
-                    'Optimización energética y procesos químicos',
-                    'Gestión de calidad, logística y cadena de suministro',
+                    'Diseño, Gestión y Optimización de Procesos',
+                    'Bioprocesos y Biorrefinerías',
+                    'Desarrollo Sostenible en Procesos',
                 ],
             ],
             [
                 'name'        => 'Diseño y construcción de obras de infraestructura para el desarrollo urbano y rural',
                 'transversal' => false,
                 'topics'      => [
-                    'Estructuras, sismorresistencia y materiales avanzados',
-                    'Geotecnia y estabilidad de taludes andinos',
-                    'Infraestructura vial, transporte y movilidad sostenible',
-                    'Recursos hídricos, hidráulica y saneamiento básico',
-                    'Construcción sostenible y economía circular en obra civil',
-                    'Geomática, fotogrametría y modelado BIM',
-                    'Gestión del riesgo de desastres e infraestructura resiliente',
+                    'Estructuras',
+                    'Geotecnia',
+                    'Agua y Medio Ambiente',
+                    'Transporte y Vías',
+                    'Métodos Numéricos en las Ciencias Básicas y la Ingeniería Civil',
+                    'Administración y Construcción',
+                    'Educación y Proyección Social en Ingeniería',
                 ],
             ],
             [
                 'name'        => 'Ingeniería, Informática y Computación',
                 'transversal' => false,
                 'topics'      => [
-                    'Ingeniería de software y arquitecturas en la nube',
-                    'Ciencia de datos, analítica y aprendizaje automático',
-                    'Ciberseguridad, redes e infraestructura crítica',
-                    'Internet de las Cosas (IoT) y ciudades inteligentes',
-                    'Sistemas de información geográfica y transformación digital',
-                    'Interacción humano-computador y accesibilidad web',
-                    'Computación de alto rendimiento y simulación',
+                    'Ingeniería de Software',
+                    'Ciencia de Datos',
+                    'Inteligencia de Negocios, Data Mining y Big Data',
+                    'Inteligencia Artificial, Machine Learning y Blockchain',
+                    'Realidad Aumentada, Virtual y Mixta',
+                    'Educación en Ingeniería de Sistemas',
+                    'Informática y Computación',
                 ],
             ],
             [
                 'name'        => 'Ambiente y Desarrollo Sostenible',
                 'transversal' => false,
                 'topics'      => [
-                    'Tratamiento de aguas, aire y biorremediación de suelos',
-                    'Gestión integral de residuos sólidos y economía circular',
-                    'Cambio climático, biodiversidad y servicios ecosistémicos',
-                    'Energías renovables y transición energética regional',
+                    'Energías Alternativas',
+                    'Gestión Ambiental',
+                    'Diagnóstico Ambiental',
+                    'Control de la Contaminación',
                 ],
             ],
             [
                 'name'        => 'Desarrollo Mecatrónico',
                 'transversal' => false,
                 'topics'      => [
-                    'Robótica móvil, industrial y de servicio',
-                    'Automatización industrial e Industria 4.0',
-                    'Sistemas embebidos, instrumentación y control automático',
-                    'Diseño mecánico, manufactura aditiva y mecatrónica agrícola',
-                    'Bioingeniería y dispositivos de rehabilitación',
+                    'Bioingeniería',
+                    'Automatización y Control',
+                    'Electrónica',
+                    'Diseño Mecánico y Prototipado',
+                    'Procesos Productivos',
                 ],
             ],
             [
-                'name'        => 'Inteligencia Artificial Aplicada a la Educación',
+                'name'        => 'Inteligencia Artificial Aplicada e Innovación Digital',
                 'transversal' => true,
                 'topics'      => [
-                    'Sistemas de tutoría inteligente y aprendizaje adaptativo',
-                    'IA generativa en la enseñanza de las ciencias y la ingeniería',
-                    'Analítica del aprendizaje (Learning Analytics) y evaluación',
-                    'Ética, gobernanza e inclusión digital con IA en el aula',
+                    'Inteligencia Artificial en Educación y Aprendizaje',
+                    'Inteligencia Artificial Generativa y Herramientas Emergentes',
+                    'Inteligencia Artificial Aplicada a la Ciencia y la Investigación',
+                    'Inteligencia Artificial en Ingeniería y Procesos Productivos',
+                    'Inteligencia Artificial para la Salud y el Bienestar',
+                    'Inteligencia Artificial para la Sostenibilidad y el Medio Ambiente',
+                    'Transformación Digital, Emprendimiento y Productividad',
+                    'Ética, Gobernanza y Uso Responsable de la Inteligencia Artificial',
                 ],
             ],
         ];
 
         foreach ($ejes as $i => $dato) {
             $eje = ThematicAxis::updateOrCreate(
-                ['name' => $dato['name']],
-                ['is_transversal' => $dato['transversal'], 'sort_order' => $i + 1]
+                ['sort_order' => $i + 1],
+                ['name' => $dato['name'], 'is_transversal' => $dato['transversal']]
             );
 
             $eje->topics()->delete();
 
             foreach ($dato['topics'] as $idx => $topicName) {
-                AxisTopic::create([
-                    'thematic_axis_id' => $eje->id,
-                    'name'             => $topicName,
-                    'sort_order'       => $idx + 1,
-                ]);
+                $eje->topics()->create(['name' => $topicName, 'sort_order' => $idx + 1]);
             }
         }
     }

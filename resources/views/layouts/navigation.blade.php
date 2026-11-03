@@ -1,7 +1,8 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-200">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-200 shadow-xs">
+    <!-- Barra superior principal -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex items-center">
                 <!-- Logo CICI 2027 -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
@@ -10,30 +11,15 @@
                     </a>
                 </div>
 
-                <!-- Enlaces principales -->
-                <div class="hidden space-x-6 sm:-my-px sm:ms-8 sm:flex">
+                <!-- Enlaces primarios (sin saturar la fila superior) -->
+                <div class="hidden space-x-6 sm:-my-px sm:ms-8 sm:flex h-16">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')">
-                        Inicio
+                        Panel Principal
                     </x-nav-link>
 
                     @if (Auth::user()->canReviewSubmissions())
                         <x-nav-link :href="route('committee.submissions.index')" :active="request()->routeIs('committee.submissions.*')">
-                            Resúmenes (Comité)
-                        </x-nav-link>
-                    @endif
-
-                    @if (Auth::user()->is_admin)
-                        <x-nav-link :href="route('admin.speakers.index')" :active="request()->routeIs('admin.speakers.*')">
-                            Ponentes
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.axes.index')" :active="request()->routeIs('admin.axes.*')">
-                            Ejes y Líneas
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.dates.index')" :active="request()->routeIs('admin.dates.*')">
-                            Fechas
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.committee.index')" :active="request()->routeIs('admin.committee.*')">
-                            Comité Científico
+                            Evaluación de Resúmenes
                         </x-nav-link>
                     @endif
 
@@ -43,19 +29,19 @@
                 </div>
             </div>
 
-            <!-- Menú de usuario -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200">
+            <!-- Menú de usuario a la derecha -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3 shrink-0">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-800 border border-indigo-200">
                     {{ Auth::user()->roleLabel() }}
                 </span>
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:text-gray-900 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <div class="ms-1.5">
+                                <svg class="fill-current h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </div>
@@ -90,15 +76,47 @@
         </div>
     </div>
 
+    <!-- Sub-barra de módulos de Administración (ordenada y adaptable) -->
+    @if (Auth::user()->is_admin)
+        @php
+            $adminLinks = [
+                ['route' => 'admin.speakers.index',  'active' => 'admin.speakers.*',  'label' => 'Ponentes'],
+                ['route' => 'admin.axes.index',      'active' => 'admin.axes.*',      'label' => 'Ejes y Subtemas'],
+                ['route' => 'admin.dates.index',     'active' => 'admin.dates.*',     'label' => 'Fechas'],
+                ['route' => 'admin.schedule.index',  'active' => 'admin.schedule.*',  'label' => 'Programa'],
+                ['route' => 'admin.documents.index', 'active' => 'admin.documents.*', 'label' => 'Documentos'],
+                ['route' => 'admin.news.index',      'active' => 'admin.news.*',      'label' => 'Noticias'],
+                ['route' => 'admin.portal.index',    'active' => 'admin.portal.*',    'label' => 'Comité / Histórico / FAQ'],
+                ['route' => 'admin.settings.index',  'active' => 'admin.settings.*',  'label' => 'Configuración y Tarifas'],
+                ['route' => 'admin.messages.index',  'active' => 'admin.messages.*',  'label' => 'Mensajes'],
+                ['route' => 'admin.committee.index', 'active' => 'admin.committee.*', 'label' => 'Cuentas Evaluadores'],
+            ];
+        @endphp
+        <div class="hidden sm:block bg-slate-50 border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 me-2">Módulos:</span>
+                    @foreach ($adminLinks as $item)
+                        @php $isActive = request()->routeIs($item['active']); @endphp
+                        <a href="{{ route($item['route']) }}"
+                           class="px-3 py-1.5 rounded-md text-xs font-semibold transition {{ $isActive ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-700 hover:bg-gray-200 hover:text-gray-900' }}">
+                            {{ $item['label'] }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Menú móvil -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-gray-200">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                Inicio
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')">
+                Panel Principal
             </x-responsive-nav-link>
             @if (Auth::user()->canReviewSubmissions())
                 <x-responsive-nav-link :href="route('committee.submissions.index')" :active="request()->routeIs('committee.submissions.*')">
-                    Resúmenes (Comité)
+                    Evaluación de Resúmenes
                 </x-responsive-nav-link>
             @endif
             @if (Auth::user()->is_admin)
@@ -106,13 +124,31 @@
                     Ponentes
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.axes.index')" :active="request()->routeIs('admin.axes.*')">
-                    Ejes y Líneas
+                    Ejes y Subtemas
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.dates.index')" :active="request()->routeIs('admin.dates.*')">
                     Fechas
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.schedule.index')" :active="request()->routeIs('admin.schedule.*')">
+                    Programa
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.documents.index')" :active="request()->routeIs('admin.documents.*')">
+                    Documentos
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.news.index')" :active="request()->routeIs('admin.news.*')">
+                    Noticias
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.portal.index')" :active="request()->routeIs('admin.portal.*')">
+                    Comité / Histórico / FAQ
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.settings.index')" :active="request()->routeIs('admin.settings.*')">
+                    Configuración y Tarifas
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.messages.index')" :active="request()->routeIs('admin.messages.*')">
+                    Mensajes
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.committee.index')" :active="request()->routeIs('admin.committee.*')">
-                    Comité Científico
+                    Cuentas Evaluadores
                 </x-responsive-nav-link>
             @endif
             <x-responsive-nav-link :href="route('home')">
