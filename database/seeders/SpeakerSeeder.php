@@ -7,14 +7,15 @@ use App\Models\ThematicAxis;
 use Illuminate\Database\Seeder;
 
 /**
- * Ponentes invitados. Datos tomados del sitio oficial https://cici.umariana.edu.co/
- * (fotos copiadas en storage/app/public/speakers; requiere `php artisan storage:link`).
+ * Ponentes invitados. Datos actualizados del sitio oficial https://cici.umariana.edu.co/
  */
 class SpeakerSeeder extends Seeder
 {
     public function run(): void
     {
-        // El número es la posición del eje en la lista oficial (sort_order).
+        // Limpiar ponente anterior si existía de versiones previas
+        Speaker::where('name', 'Dr. Jesús Daniel Villalba Morales')->delete();
+
         $ponentes = [
             [
                 'axis'        => 6,
@@ -25,7 +26,7 @@ class SpeakerSeeder extends Seeder
                 'city'        => 'Ibarra',
                 'country'     => 'Ecuador',
                 'bio'         => 'PhD y docente-investigadora de la Universidad Técnica del Norte, con trayectoria en ingeniería de software, educación en informática e investigación.',
-                'talk_title'  => null,
+                'talk_title'  => 'Conferencia magistral: Inteligencia Artificial Aplicada e Innovación Digital',
             ],
             [
                 'axis'        => 1,
@@ -40,14 +41,14 @@ class SpeakerSeeder extends Seeder
             ],
             [
                 'axis'        => 2,
-                'name'        => 'Dr. Jesús Daniel Villalba Morales',
-                'photo'       => 'speakers/jesus-daniel-villalba-morales.png',
+                'name'        => 'Dr. Mauricio Alvarado Bueno',
+                'photo'       => 'speakers/mauricio-alvarado-bueno.jpg',
                 'specialty'   => 'Diseño y construcción de obras de infraestructura para el desarrollo urbano y rural',
-                'institution' => 'Universidad Javeriana',
-                'city'        => 'Bogotá',
+                'institution' => 'Universidad Santiago de Cali (USC)',
+                'city'        => 'Cali',
                 'country'     => 'Colombia',
-                'bio'         => 'Doctor en Ingeniería Civil – Ingeniería de Estructuras. Profesor Asociado del Departamento de Ingeniería Civil de la Pontificia Universidad Javeriana e investigador en estructuras y construcción.',
-                'talk_title'  => 'Sistemas de Protección Sísmica: hacia estructuras más resilientes',
+                'bio'         => 'Ingeniero Civil. Máster en Ingeniería del Terreno y Sísmica. Doctorado en Ingeniería Geotécnica.',
+                'talk_title'  => 'Conferencia magistral: Ingeniería Civil y Geotecnia',
             ],
             [
                 'axis'        => 3,
@@ -58,7 +59,7 @@ class SpeakerSeeder extends Seeder
                 'city'        => 'Ibarra',
                 'country'     => 'Ecuador',
                 'bio'         => 'PhD y docente vinculado a la Universidad Técnica del Norte, con trayectoria en ingeniería de software, investigación y dirección de trabajos de titulación. Autor y coautor de publicaciones sobre gestión de proyectos de software, APIs y calidad de software.',
-                'talk_title'  => null,
+                'talk_title'  => 'Conferencia magistral: Ingeniería de Sistemas y Software',
             ],
             [
                 'axis'        => 4,
@@ -69,18 +70,18 @@ class SpeakerSeeder extends Seeder
                 'city'        => 'Manhattan, Kansas',
                 'country'     => 'Estados Unidos',
                 'bio'         => 'PhD en Ingeniería Química por la University of Kansas (2026). Su experiencia investigativa incluye tratamiento de aguas residuales, catálisis, química verde y procesos de oxidación avanzada.',
-                'talk_title'  => null,
+                'talk_title'  => 'Conferencia magistral: Ambiente y Desarrollo Sostenible',
             ],
             [
                 'axis'        => 4,
                 'name'        => 'Dr. Marcial Reyes Cázarez',
                 'photo'       => 'speakers/marcial-reyes-cazarez.png',
                 'specialty'   => 'Ambiente y Desarrollo Sostenible',
-                'institution' => 'Tecnológico Nacional de México – Instituto Tecnológico Superior de Pátzcuaro',
+                'institution' => 'Tecnológico Nacional de México · Instituto Tecnológico Superior de Pátzcuaro',
                 'city'        => 'Morelia, Michoacán',
                 'country'     => 'México',
                 'bio'         => 'Doctor en Género y Derecho, Maestro en Ciencias y Tecnología de la Madera e Ingeniero Forestal. Autor de artículos científicos sobre materia forestal, derecho a la propiedad agraria, recursos hídricos, legislación ambiental, gestión de proyectos, remediación de suelos y alternativas tecnológicas ambientales. Miembro del Sistema Nacional de Investigadoras e Investigadores, docente de educación superior con más de una década de experiencia e investigador en temas hidroforestales, servicios ecosistémicos, disponibilidad y calidad del agua y cambio de uso del suelo.',
-                'talk_title'  => null,
+                'talk_title'  => 'Conferencia magistral: Gestión Hidroforestal y Sostenibilidad Ambiental',
             ],
             [
                 'axis'        => 5,

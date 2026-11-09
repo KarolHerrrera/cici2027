@@ -50,18 +50,21 @@ RUN composer dump-autoload --no-dev --optimize \
     && chown -R www-data:www-data storage bootstrap/cache database
 
 # Valores por defecto para producción (en Render se pueden cambiar en "Environment")
+# Nota: DB_DATABASE no se fija aquí para no interferir cuando se usa DB_URL (PostgreSQL/MySQL).
 ENV APP_ENV=production \
     APP_DEBUG=false \
     LOG_CHANNEL=stderr \
     DB_CONNECTION=sqlite \
-    DB_DATABASE=/var/www/html/database/database.sqlite \
+    RUN_MIGRATIONS=true \
+    RUN_SEEDERS=true \
     SESSION_DRIVER=file \
     CACHE_STORE=file \
     CACHE_DRIVER=file \
     QUEUE_CONNECTION=sync
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 10000
 ENTRYPOINT ["entrypoint.sh"]

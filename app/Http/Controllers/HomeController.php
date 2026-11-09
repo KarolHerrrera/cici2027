@@ -74,7 +74,7 @@ class HomeController extends Controller
                 'nombre'    => $f->profile,
                 'detalle'   => $f->description,
                 'valor'     => $f->price_amount,
-                'destacada' => $f->price_amount === 350000,
+                'destacada' => $f->price_amount === 250000,
                 'incluye'   => $f->includes,
             ])->all();
         } else {
@@ -89,13 +89,13 @@ class HomeController extends Controller
                     'nombre'    => 'Ponente nacional · póster',
                     'detalle'   => 'Inscripción para ponentes nacionales con presentación en modalidad póster presencial.',
                     'valor'     => 250000,
-                    'destacada' => false,
+                    'destacada' => true,
                 ],
                 [
                     'nombre'    => 'Ponente nacional · oral',
                     'detalle'   => 'Inscripción para ponentes nacionales con presentación oral, en modalidad presencial o virtual. Las ponencias virtuales están sujetas a cupos limitados.',
                     'valor'     => 350000,
-                    'destacada' => true,
+                    'destacada' => false,
                 ],
                 [
                     'nombre'    => 'Ponente internacional',
@@ -273,6 +273,7 @@ class HomeController extends Controller
                 'resumenes'         => $abstractFormUrl ?: route('submissions.public.create'),
                 'resumenes_externo' => (bool) $abstractFormUrl,
                 'inscripciones'     => $registrationUrl,
+                'terminos'          => CongressSetting::getValue('terms_url', config('cici.terms_url')) ?: asset('documentos/terminos-de-referencia-cici-2027.pdf'),
                 'whatsapp'          => config('cici.whatsapp_url'),
             ],
 

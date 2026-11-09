@@ -21,8 +21,8 @@ class Speaker extends Model
     /**
      * Resuelve la URL de la fotografía del ponente soportando:
      * 1. Enlaces directos en la nube (Firebase Storage, Google Cloud, AWS S3, Cloudflare R2).
-     * 2. Disco configurado en Laravel Storage (s3 o public).
-     * 3. Respaldo en public/images/ponentes/ para que nunca falle al clonar el repositorio.
+     * 2. Imágenes oficiales incluidas en public/images/ponentes/ (no dependen de storage:link).
+     * 3. Disco configurado en Laravel Storage (s3 o public) para nuevos ponentes subidos desde el panel.
      */
     public function photoUrl(): ?string
     {
@@ -41,10 +41,6 @@ class Speaker extends Model
         $disk = config('cici.uploads_disk', 'public');
         if ($disk === 's3') {
             return Storage::disk('s3')->url($this->photo);
-        }
-
-        if (Storage::disk('public')->exists($this->photo)) {
-            return asset('storage/' . ltrim($this->photo, '/'));
         }
 
         $fallbackFile = 'images/ponentes/' . basename($this->photo);

@@ -1,21 +1,30 @@
-# "Blueprint" de Render: crea el servicio web y una base de datos PostgreSQL, ya conectados.
-# Cambie "mi-laravel" y "mi-laravel-db" por nombres suyos (en minúsculas y sin espacios).
+# Blueprint de Render para el portal oficial CICI 2027 (Universidad Mariana)
+# Despliega el contenedor Docker junto con la base de datos PostgreSQL conectada y poblada automáticamente.
 services:
   - type: web
-    name: mi-laravel
+    name: cici2027
     runtime: docker
     plan: free
     envVars:
-      # Clave de la aplicación: Render la pide al crear el Blueprint (ver README).
+      - key: APP_NAME
+        value: "CICI 2027 · Universidad Mariana"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
       - key: APP_KEY
-        sync: false
+        generateValue: true
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL
         fromDatabase:
-          name: mi-laravel-db
+          name: cici2027-db
           property: connectionString
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: RUN_SEEDERS
+        value: "true"
 
 databases:
-  - name: mi-laravel-db
+  - name: cici2027-db
     plan: free

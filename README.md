@@ -1,131 +1,83 @@
-# Kit para desplegar un proyecto Laravel en Render
+# Plataforma Web Oficial — IV Congreso Internacional de Ciencia e Ingeniería (CICI 2027)
+**Facultad de Ingeniería · Universidad Mariana (San Juan de Pasto, Nariño, Colombia)**  
+Sitio oficial de referencia: [https://cici.umariana.edu.co/](https://cici.umariana.edu.co/)
 
-Con estos archivos usted puede desplegar **su proyecto Laravel** en [Render](https://render.com) **sin saber Docker**: los copia a la raíz de su proyecto, sube el proyecto a GitHub y crea el servicio en Render.
+---
 
-Render no tiene PHP de forma nativa, por eso se despliega con Docker. El `Dockerfile` de este kit hace todo el trabajo: instala PHP y Apache, instala las dependencias con Composer, compila el frontend (Vite) si su proyecto lo tiene, y al arrancar crea las tablas de la base de datos.
+## 1. Credenciales de Acceso Iniciales (creadas automáticamente por los Seeders)
 
-## Qué necesita
+Al ejecutar `php artisan migrate --seed` (o al desplegar en Render / Docker, donde `RUN_MIGRATIONS=true` y `RUN_SEEDERS=true` están activos por defecto), el sistema crea automáticamente las cuentas oficiales:
 
-- Un proyecto **Laravel** que ya funcione en su computador (Laravel 12 o 13 probados; los anteriores deberían funcionar, pero no se probaron).
-- Una cuenta de **GitHub** y una de **Render** (puede entrar a Render con GitHub).
-- **Git** instalado.
+| Rol en la Plataforma | Correo electrónico | Contraseña | Ruta de acceso |
+|---|---|---|---|
+| **Administrador General** | `admin@cici.test` | `Cici2027*` | `/login` → `/admin` |
+| **Líder del Comité Científico** (Ing. Civil) | `comite@cici.test` | `Comite2027*` | `/login` → `/comite/resumenes` |
+| **Evaluadora del Comité Científico** (Ing. Ambiental) | `evaluador@cici.test` | `Comite2027*` | `/login` → `/comite/resumenes` |
 
-## Los archivos del kit
+### Cédulas de prueba para Consulta Pública (`/estado-resumen`)
+- `1085200101` — **Aprobado en Modalidad Póster** (habilita descarga de plantilla de póster).
+- `1085200202` — **Aprobado en Ponencia Oral**.
+- `1085200303` — **En revisión por el Comité Científico**.
 
-Copie estos **cuatro** archivos a la **raíz de su proyecto** (la carpeta donde está `artisan`):
+---
 
-| Archivo | Para qué sirve |
-|---|---|
-| `Dockerfile` | Describe cómo construir y ejecutar su aplicación. |
-| `docker/entrypoint.sh` | Se ejecuta al arrancar: configura el puerto, genera la clave si falta y corre las migraciones. (Cree la carpeta `docker` dentro de su proyecto.) |
-| `.dockerignore` | Evita enviar al servidor archivos que no hacen falta (`vendor`, `node_modules`, su `.env`...). |
-| `render.yaml` | Le dice a Render que cree el servicio web **y** una base de datos PostgreSQL, ya conectados. |
+## 2. Ejecución Local (Visual Studio Code / Windows)
 
-Su proyecto debe quedar así:
+```powershell
+# 1. Instalar dependencias (si copiaste la carpeta sin vendor o node_modules)
+composer install
+npm install
 
+# 2. Preparar base de datos SQLite local, enlaces simbólicos y datos oficiales
+php artisan storage:link
+php artisan migrate:fresh --seed
+
+# 3. Levantar el servidor (en dos terminales de VS Code):
+# Terminal 1:
+npm run dev
+# Terminal 2:
+php artisan serve
 ```
-su-proyecto/
-├── app/
-├── artisan
-├── composer.json
-├── composer.lock
-├── Dockerfile            ← nuevo
-├── .dockerignore         ← nuevo
-├── render.yaml           ← nuevo
-└── docker/
-    └── entrypoint.sh     ← nuevo
-```
+Luego abre **[http://127.0.0.1:8000](http://127.0.0.1:8000)**.
 
-## Antes de empezar: revise esto
+> **Nota importante sobre `.env` local:** En tu computador deja `DB_CONNECTION=sqlite` y mantén comentada la línea `#DB_URL=...` (la URL `postgresql://...` interna de Render solo funciona dentro de la nube de Render).
 
-1. **Versión de PHP.** El `Dockerfile` usa PHP 8.4. Abra su `composer.json` y mire la línea `"php": "..."`. Si su proyecto necesita otra versión, cambie la primera línea del `Dockerfile` (`ARG PHP_VERSION=8.4`), por ejemplo a `8.3`.
-2. **`composer.lock` debe estar en el repositorio** (no lo ponga en `.gitignore`). Así se instalan las mismas versiones que usted probó.
-3. **No suba su `.env` ni la carpeta `vendor`.** El `.gitignore` de Laravel ya los excluye: no lo cambie. Los secretos se escriben en Render, no en el repositorio.
-4. **La base de datos en Render es PostgreSQL.** Si en su computador usa MySQL o SQLite, sus migraciones deben servir también en PostgreSQL. Casi siempre funcionan sin cambios; fallan si usan SQL escrito a mano propio de MySQL.
-5. **Nombres del `render.yaml`.** Cambie `mi-laravel` y `mi-laravel-db` por nombres suyos (en minúsculas, sin espacios). Si cambia el nombre de la base de datos, cámbielo también en `fromDatabase`.
+---
 
-## Probar en su computador (opcional)
+## 3. Despliegue en Render (Docker + PostgreSQL o SQLite)
 
-Si tiene Docker Desktop, puede comprobar que la imagen funciona antes de subir nada:
+El proyecto ya incluye `Dockerfile`, `docker/entrypoint.sh`, `.dockerignore` y `render.yaml` corregidos y listos para producción:
 
-```bash
-docker build -t mi-laravel .
-docker run --rm -p 8080:10000 mi-laravel
-```
+1. **Autodetección de Base de Datos (`docker/entrypoint.sh`)**:
+   - Si configuras `DB_URL=postgresql://...` (o `DATABASE_URL`) en Render, el contenedor activa automáticamente `DB_CONNECTION=pgsql` y limpia `DB_DATABASE` para que no haya conflicto con SQLite.
+   - Si no conectas una base de datos externa, el contenedor funciona automáticamente con **SQLite** (`/var/www/html/database/database.sqlite`).
+2. **Migraciones y Seeders Automáticos (`RUN_MIGRATIONS=true` y `RUN_SEEDERS=true`)**:
+   - Cada vez que el contenedor arranca en Render, ejecuta `php artisan migrate --force` y `php artisan db:seed --force` (todos los seeders usan `updateOrCreate`, por lo que son idempotentes y no duplican registros).
+   - Esto garantiza que el usuario **`admin@cici.test` (`Cici2027*`)**, los 7 ponentes oficiales (incluido el **Dr. Mauricio Alvarado Bueno**), los Términos de Referencia en PDF y la programación académica de los 3 días estén disponibles desde el primer arranque.
 
-Abra <http://localhost:8080/>. Esta prueba usa SQLite, sin PostgreSQL.
+### Pasos en Render
+1. Sube los últimos cambios a GitHub (`git push origin main`).
+2. En [dashboard.render.com](https://dashboard.render.com):
+   - **Opción A (Blueprint automático con PostgreSQL):** Haz clic en **New + → Blueprint**, selecciona el repositorio `cici2027` y pulsa **Apply**. Render leerá `render.yaml`, creará la base de datos `cici2027-db`, el servicio web `cici2027`, generará `APP_KEY` y poblará todas las tablas y usuarios automáticamente.
+   - **Opción B (Si ya tenías el Web Service creado en Render):** Entra a tu servicio en Render → pestaña **Environment**:
+     - Si tienes una base PostgreSQL en Render, pon su *Internal Database URL* en `DB_URL` y `DB_CONNECTION=pgsql` (elimina `DB_DATABASE` si aparece en Environment).
+     - Si no tienes base PostgreSQL creada, deja `DB_CONNECTION=sqlite` y elimina `DB_URL`.
+     - Pulsa **Manual Deploy → Deploy latest commit**.
 
-## Subir el proyecto a GitHub
+---
 
-Si su proyecto ya está en un repositorio de GitHub, solo haga:
+## 4. Despliegue en el Servidor Institucional de la Universidad Mariana (`cici.umariana.edu.co`)
 
-```bash
-git add Dockerfile .dockerignore render.yaml docker
-git commit -m "Agregar archivos de despliegue en Render"
-git push
-```
-
-Si aún no tiene repositorio, cree uno en GitHub (vacío) y, desde la carpeta de su proyecto:
-
-```bash
-git init -b main
-git add .
-git commit -m "Proyecto Laravel"
-git remote add origin <URL-DE-SU-REPOSITORIO>
-git push -u origin main
-```
-
-## Desplegar en Render
-
-1. **Genere la clave de la aplicación** (`APP_KEY`). En una terminal:
-
+Cuando la Oficina de Sistemas / TI de la Universidad Mariana reciba el proyecto para producción:
+1. Configurar `.env` con las credenciales de la base de datos institucional (`pgsql` o `mysql`), `APP_ENV=production`, `APP_DEBUG=false` y `APP_URL=https://cici.umariana.edu.co`.
+2. Apuntar el `DocumentRoot` de Apache o Nginx a la carpeta `/public`.
+3. Ejecutar una única vez:
    ```bash
-   echo "base64:$(openssl rand -base64 32)"
+   composer install --no-dev --optimize-autoloader
+   npm ci && npm run build
+   php artisan key:generate --force
+   php artisan storage:link
+   php artisan migrate --seed --force
+   php artisan optimize
    ```
-
-   Copie el resultado completo (empieza por `base64:`). *(En Windows, dentro de Git Bash funciona igual. Otra opción: `php artisan key:generate --show` en su proyecto.)*
-
-2. Entre a [dashboard.render.com](https://dashboard.render.com), pulse **New +** y elija **Blueprint**.
-3. Conecte su cuenta de GitHub si se lo pide y elija **su repositorio**. Render lee el `render.yaml`.
-4. Render le pedirá el valor de **`APP_KEY`**: pegue la clave del paso 1. Pulse **Apply** / **Deploy**.
-5. Espere. La primera vez tarda unos minutos porque construye la imagen. Abra la pestaña **Logs** del servicio web para ver el avance.
-6. Cuando el servicio aparezca como **Live**, abra la URL que muestra Render (`https://...onrender.com`).
-
-Cada vez que haga `git push` a la rama `main`, Render vuelve a desplegar solo.
-
-### Cómo saber que salió bien
-
-- En los **Logs** debe ver las migraciones: líneas con `create_..._table ... DONE`, y después Apache iniciando.
-- La URL abre su aplicación. Pruebe crear, editar y eliminar datos; después haga un **Manual Deploy** y compruebe que los datos siguen ahí (porque están en PostgreSQL).
-
-## Variables de entorno (opcionales)
-
-Se cambian en el servicio, en **Environment**. Render vuelve a desplegar al guardarlas.
-
-| Variable | Valor | Para qué |
-|---|---|---|
-| `APP_KEY` | `base64:...` | La clave de la aplicación (ya la definió al crear el Blueprint). |
-| `APP_URL` | `https://su-servicio.onrender.com` | La dirección pública. Opcional: la aplicación arma sus enlaces con la petición. |
-| `APP_DEBUG` | `false` | **No la ponga en `true` en producción**: muestra detalles internos. Úsela solo un momento para ver un error 500 y vuelva a ponerla en `false`. |
-| `RUN_SEEDERS` | `true` | Ejecuta `php artisan db:seed` al arrancar (por defecto no se ejecuta). |
-| `RUN_MIGRATIONS` | `false` | Evita que se ejecuten las migraciones al arrancar (por defecto sí se ejecutan). |
-
-Otras variables que su proyecto necesite (correo, claves de APIs...) también se agregan ahí, igual que en su `.env`.
-
-## Cosas que debe saber del plan gratuito
-
-- El servicio se **"duerme"** tras unos 15 minutos sin visitas. La primera petición después tarda cerca de un minuto.
-- La base de datos PostgreSQL **gratuita caduca** pasado un tiempo (hace poco eran unos 30 días): revise las condiciones vigentes en Render.
-- Los **archivos que los usuarios suban** a la carpeta `storage` se pierden en cada despliegue o reinicio: el disco del plan gratuito es temporal.
-
-## Si algo falla
-
-| Síntoma | Qué hacer |
-|---|---|
-| El despliegue falla al construir, con un mensaje sobre `php >= 8.x` | Su `composer.lock` exige otra versión de PHP: cambie `ARG PHP_VERSION` en el `Dockerfile` (ver *Antes de empezar*). |
-| `could not find driver` | Su `DB_CONNECTION` no es `pgsql` o falta `DB_URL`: revise que la base de datos del Blueprint esté creada y enlazada. |
-| Error 500 al abrir la página | Ponga `APP_DEBUG=true` un momento, lea el error y vuelva a ponerlo en `false`. Mire también los **Logs**. |
-| La página sale sin estilos | Su frontend no se compiló: revise que `package.json` tenga un script `"build"` y que `npm run build` funcione en su computador. |
-| "No open ports detected" | No cambie el `ENTRYPOINT` ni `docker/entrypoint.sh`: son los que configuran el puerto de Render. |
-| Los *seeders* fallan con `Call to undefined function fake()` | Los seeders que usan *factories* necesitan Faker en producción: ejecute `composer require fakerphp/faker` (lo mueve a `require`), haga commit de `composer.json` y `composer.lock` y vuelva a subir. |
-| Las migraciones fallan en PostgreSQL | Alguna migración usa SQL propio de MySQL. Corríjala para que use el constructor de esquemas de Laravel. |
+4. Ingresar con `admin@cici.test` / `Cici2027*` en `/login` y actualizar la contraseña del administrador desde `/profile`.

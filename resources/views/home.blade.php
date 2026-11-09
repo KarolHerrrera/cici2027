@@ -183,7 +183,7 @@
 <section class="section section--dark" id="programa">
     <div class="container">
         <x-section-title title="Programa del Congreso"
-            subtitle="Agenda preliminar de conferencias magistrales y sesiones académicas administrable por el comité organizador." />
+            subtitle="Agenda académica por jornada, horario y espacio del CICI 2027." />
 
         <div class="grid grid--3">
             @foreach ($jornadas as $j)
@@ -191,7 +191,7 @@
                     <span class="day__name">{{ $j['dia'] }}</span>
                     <span class="day__num">{{ $j['numero'] }}</span>
                     <span class="day__month">{{ $j['mes'] }} de 2027</span>
-                    <p>Conferencias magistrales, ponencias orales y sesión de pósteres.</p>
+                    <p>Conferencias magistrales, ponencias orales, pósteres y paneles académicos.</p>
                 </article>
             @endforeach
         </div>
@@ -202,7 +202,7 @@
                     <details class="card" style="background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); color: #fff;" @if ($loop->first) open @endif>
                         <summary style="cursor: pointer; font-weight: 700; font-size: 1.05rem; color: #fff; display: flex; justify-content: space-between; align-items: center;">
                             <span>{{ $dayLabel }}</span>
-                            <span style="font-size: .8rem; opacity: .85;">{{ count($items) }} actividades programadas ▾</span>
+                            <span style="font-size: .8rem; opacity: .85;">{{ count($items) }} bloques programados ▾</span>
                         </summary>
                         <div style="margin-top: 1rem; display: grid; gap: .85rem;">
                             @foreach ($items as $item)
@@ -218,6 +218,9 @@
                                     @if ($item->speaker_name)
                                         <div style="font-size: .86rem; color: #93c5fd; margin-top: .2rem;">{{ $item->speaker_name }}</div>
                                     @endif
+                                    @if ($item->description)
+                                        <div style="font-size: .84rem; color: #cbd5e1; margin-top: .2rem;">{{ $item->description }}</div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -225,6 +228,10 @@
                 @endforeach
             </div>
         @endif
+
+        <p class="note note--dark" style="margin-top: 1.5rem; font-size: .88rem; color: rgba(255,255,255,.78);">
+            La programación está sujeta a ajustes por parte del comité organizador y académico del CICI 2027.
+        </p>
     </div>
 </section>
 
@@ -237,7 +244,7 @@
         <div class="grid grid--4 prices">
             @foreach ($tarifas as $t)
                 <article class="card price {{ $t['destacada'] ? 'is-featured' : '' }}">
-                    @if ($t['destacada'])<span class="price__flag">Más elegida</span>@endif
+                    @if ($t['destacada'])<span class="price__flag">Ponencia nacional · póster</span>@endif
                     <h3>{{ $t['nombre'] }}</h3>
                     <p class="card__meta">{{ $t['detalle'] }}</p>
                     <p class="price__value">${{ number_format($t['valor'], 0, ',', '.') }} <small style="font-size:.5em; font-weight:700;">COP</small></p>
@@ -246,12 +253,15 @@
         </div>
 
         <p class="note" style="margin-top:1.75rem;">
-            <strong>Importante:</strong> el pago de inscripción se realiza por proyecto. Cada proyecto podrá estar integrado por un máximo de 7 personas.
-            Para conocer las condiciones, requisitos, modalidades de participación y demás información relacionada con la inscripción, consulte los Términos de Referencia del Congreso (próximamente).
+            <strong>Importante:</strong> el pago de inscripción se realiza por proyecto. Cada proyecto podrá estar integrado por un máximo de 7 autores.
+            Para conocer las condiciones, requisitos, modalidades de participación y demás información relacionada con la inscripción, consulte los Términos de Referencia del Congreso.
         </p>
 
         <div class="actions" style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
             <a href="{{ $enlaces['inscripciones'] }}" class="btn btn--primary" target="_blank" rel="noopener">Realizar inscripción →</a>
+            @if (!empty($enlaces['terminos']))
+                <a href="{{ $enlaces['terminos'] }}" class="btn btn--outline" target="_blank" rel="noopener">Consultar términos de referencia (PDF) →</a>
+            @endif
         </div>
     </div>
 </section>
