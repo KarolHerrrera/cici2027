@@ -54,7 +54,7 @@ if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
 fi
 
 # Cargar datos oficiales y usuarios de acceso (admin@cici.test, comite@cici.test) usando updateOrCreate (idempotente)
-if [ "${RUN_SEEDERS:-true}" = "true" ]; then
+if [ "${SKIP_SEEDERS:-false}" != "true" ]; then
     echo "==> Sincronizando datos oficiales y usuarios iniciales (seeders idempotentes)..."
     php artisan db:seed --force || echo "AVISO: los seeders reportaron una advertencia (revise el log)."
 fi

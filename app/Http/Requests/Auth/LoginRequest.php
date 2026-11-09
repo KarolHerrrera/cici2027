@@ -42,6 +42,36 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // Autoprotección para despliegues en la nube (Render): si la BD recién migrada aún no tiene las cuentas oficiales, sembrarlas automáticamente.
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('users') && \App\Models\User::where('email', 'admin@cici.test')->doesntExist()) {
+                (new \Database\Seeders\DatabaseSeeder())->run();
+            }
+        } catch (\Throwable $e) {
+            // Si algún seeder secundario falla, garantizar igualmente las cuentas de acceso principales:
+            try {
+                \App\Models\User::updateOrCreate(
+                    ['email' => 'admin@cici.test'],
+                    [
+                        'name'     => 'Administrador CICI 2027',
+                        'password' => \Illuminate\Support\Facades\Hash::make('Cici2027*'),
+                        'is_admin' => true,
+                    ]
+                );
+                \App\Models\User::updateOrCreate(
+                    ['email' => 'comite@cici.test'],
+                    [
+                        'name'                => 'Prof. Fabián · Líder Comité Científico',
+                        'password'            => \Illuminate\Support\Facades\Hash::make('Comite2027*'),
+                        'is_committee'        => true,
+                        'is_committee_leader' => true,
+                        'specialty'           => 'Ingeniería Civil',
+                    ]
+                );
+            } catch (\Throwable) {
+            }
+        }
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

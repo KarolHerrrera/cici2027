@@ -38,6 +38,13 @@ class HomeController extends Controller
 
     private function buildHomeData(): array
     {
+        // Si la base de datos en producción/Render está recién migrada y vacía, poblarla automáticamente:
+        try {
+            if (Schema::hasTable('speakers') && Speaker::count() === 0) {
+                (new \Database\Seeders\DatabaseSeeder())->run();
+            }
+        } catch (\Throwable) {
+        }
 
         $fechas = ImportantDate::orderBy('date')->get()->map(fn ($d) => [
             'titulo'    => $d->title,

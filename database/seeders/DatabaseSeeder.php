@@ -11,6 +11,17 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Crear primero el usuario Administrador General para garantizar acceso inmediato en cualquier entorno
+        User::updateOrCreate(
+            ['email' => 'admin@cici.test'],
+            [
+                'name'     => 'Administrador CICI 2027',
+                'password' => Hash::make('Cici2027*'),
+                'is_admin' => true,
+            ]
+        );
+
+        // 2. Sembrar ejes temáticos, ponentes, fechas y contenido oficial del portal
         $this->call([
             ThematicAxisSeeder::class,
             SpeakerSeeder::class,
@@ -21,16 +32,7 @@ class DatabaseSeeder extends Seeder
         $civilAxis = ThematicAxis::where('name', 'like', '%infraestructura%')->first();
         $envAxis   = ThematicAxis::where('name', 'like', '%Ambiente%')->first();
 
-        User::updateOrCreate(
-            ['email' => 'admin@cici.test'],
-            [
-                'name'     => 'Administrador CICI 2027',
-                'password' => Hash::make('Cici2027*'),
-                'is_admin' => true,
-            ]
-        );
-
-        // Líder del Comité Científico (Ingeniería Civil).
+        // 3. Líder del Comité Científico (Ingeniería Civil)
         User::updateOrCreate(
             ['email' => 'comite@cici.test'],
             [
@@ -43,7 +45,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Segundo miembro evaluador del Comité Científico.
+        // 4. Segundo miembro evaluador del Comité Científico
         User::updateOrCreate(
             ['email' => 'evaluador@cici.test'],
             [
@@ -56,6 +58,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // 5. Resúmenes de prueba para consulta pública por cédula y evaluación
         $this->call([
             SubmissionSeeder::class,
         ]);
