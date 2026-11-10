@@ -7,10 +7,11 @@ PORT="${PORT:-10000}"
 sed -i "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf
 sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
 
-# Si no se configuró APP_KEY, se genera una automáticamente.
-if [ -z "$APP_KEY" ]; then
-    export APP_KEY="$(php artisan key:generate --show)"
-fi
+# Si no se configuró APP_KEY (o no tiene formato base64: válido de Laravel), se genera una automáticamente.
+case "$APP_KEY" in
+    base64:*) ;;
+    *) export APP_KEY="$(php artisan key:generate --show)" ;;
+esac
 
 # Compatibilidad con Render / proveedores cloud: si se define DATABASE_URL pero no DB_URL, sincronizarla.
 if [ -n "$DATABASE_URL" ] && [ -z "$DB_URL" ]; then
