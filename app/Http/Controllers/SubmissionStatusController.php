@@ -122,6 +122,13 @@ class SubmissionStatusController extends Controller
 
     private function findSubmissions(string $input, ?string $email = null)
     {
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('submissions') && Submission::count() === 0) {
+                (new \Database\Seeders\DatabaseSeeder())->run();
+            }
+        } catch (\Throwable) {
+        }
+
         $raw = trim($input);
         $normalized = Submission::normalizeDocument($raw);
 
@@ -129,7 +136,7 @@ class SubmissionStatusController extends Controller
             ->where(function ($q) use ($raw, $normalized) {
                 $q->where('document', $normalized)
                   ->orWhereRaw('UPPER(tracking_code) = ?', [mb_strtoupper($raw)])
-                  ->orWhereRaw('REPLACE(UPPER(tracking_code), "-", "") = ?', [$normalized]);
+                  ->orWhereRaw("REPLACE(UPPER(tracking_code), '-', '') = ?", [$normalized]);
             });
 
         if ($email !== null && trim($email) !== '') {
