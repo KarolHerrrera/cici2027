@@ -118,28 +118,78 @@ a { color: var(--azul-claro); }
     background: radial-gradient(ellipse 80% 65% at 50% 36%, #1a8fb4 0%, #126aa6 34%, #0b3f86 68%, #0a2f66 100%);
 }
 .hero::before {
-    content: ''; position: absolute; inset: 0; pointer-events: none;
+    content: ''; position: absolute; inset: -12px; pointer-events: none;
     background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1440 720%22 preserveAspectRatio=%22xMidYMid slice%22%3E%3Cg fill=%22none%22 stroke=%22%23fff%22 stroke-width=%222%22 stroke-opacity=%22.17%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M-20 540H130L180 490V320%22/%3E%3Cpath d=%22M1460 540H1310L1260 490V320%22/%3E%3Cpath d=%22M40 650H210L260 600V440%22/%3E%3Cpath d=%22M1400 650H1230L1180 600V440%22/%3E%3Cpath d=%22M-10 400H70L110 360V250%22/%3E%3Cpath d=%22M1450 400H1370L1330 360V250%22/%3E%3Cpath d=%22M300 700V640L340 600V520%22/%3E%3Cpath d=%22M1140 700V640L1100 600V520%22/%3E%3C/g%3E%3Cg fill=%22none%22 stroke=%22%23fff%22 stroke-width=%222%22 stroke-opacity=%22.28%22%3E%3Ccircle cx=%22180%22 cy=%22310%22 r=%227%22/%3E%3Ccircle cx=%221260%22 cy=%22310%22 r=%227%22/%3E%3Ccircle cx=%22260%22 cy=%22430%22 r=%227%22/%3E%3Ccircle cx=%221180%22 cy=%22430%22 r=%227%22/%3E%3Ccircle cx=%22110%22 cy=%22240%22 r=%227%22/%3E%3Ccircle cx=%221330%22 cy=%22240%22 r=%227%22/%3E%3Ccircle cx=%22340%22 cy=%22510%22 r=%227%22/%3E%3Ccircle cx=%221100%22 cy=%22510%22 r=%227%22/%3E%3C/g%3E%3Ccircle cx=%22150%22 cy=%22130%22 r=%229%22 fill=%22%23f07019%22 fill-opacity=%22.9%22/%3E%3Ccircle cx=%221290%22 cy=%22120%22 r=%229%22 fill=%22%23f07019%22 fill-opacity=%22.9%22/%3E%3Ccircle cx=%221210%22 cy=%22600%22 r=%227%22 fill=%22%232fae7b%22 fill-opacity=%22.9%22/%3E%3Ccircle cx=%22230%22 cy=%22610%22 r=%227%22 fill=%22%232fae7b%22 fill-opacity=%22.9%22/%3E%3C/svg%3E") center / cover no-repeat;
+    animation: flotarCircuitos 9s ease-in-out infinite alternate;
 }
-.hero__inner { position: relative; display: flex; flex-direction: column; align-items: center; }
+.hero::after {
+    content: ''; position: absolute; width: 520px; height: 520px; top: 8%; left: 50%;
+    transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(47, 174, 123, .16) 0%, rgba(240, 112, 25, .08) 45%, transparent 72%);
+    filter: blur(18px);
+    animation: respirarLuz 7s ease-in-out infinite alternate;
+}
+.hero__inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
 
 .hero__badge {
     display: inline-flex; align-items: center; gap: .55rem; margin-bottom: 1.75rem;
     padding: .35rem 1rem .35rem .8rem; border-radius: 999px;
-    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28);
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.32);
+    backdrop-filter: blur(6px);
     font-weight: 700; font-size: .95rem;
 }
-.hero__badge::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--naranja); }
+.hero__badge::before {
+    content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--naranja);
+    box-shadow: 0 0 0 0 rgba(240, 112, 25, .75);
+    animation: pulsoDot 2.4s infinite;
+}
 
-.hero__logo { width: min(100%, 600px); height: auto; margin-bottom: 2rem; }
+.hero__logo {
+    width: min(100%, 600px); height: auto; margin-bottom: 2rem;
+    filter: drop-shadow(0 12px 28px rgba(7, 32, 71, .28));
+    animation: subir .7s cubic-bezier(.2, .7, .2, 1) .08s both, flotarLogo 5.5s ease-in-out .9s infinite;
+}
 .hero__dates { margin-bottom: .6rem; font-size: clamp(1.5rem, 5.4vw, 2.5rem); font-weight: 900; letter-spacing: -.01em; line-height: 1.15; }
 .hero__lead { max-width: 540px; margin-bottom: 2rem; font-size: 1.15rem; font-weight: 300; font-style: italic; opacity: .95; }
 .hero__actions { display: flex; flex-direction: column; gap: .8rem; width: 100%; max-width: 340px; }
 
-/* Entrada del hero: un solo movimiento al cargar la página */
+/* Bloque dinámico de identidad cuando se cambia el año en Admin (ej. 2027 -> 2028) */
+.dynamic-brand {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1.25rem 1.75rem; border-radius: 20px;
+    background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .24);
+    backdrop-filter: blur(8px);
+}
+.dynamic-brand__top { display: flex; align-items: baseline; gap: .85rem; margin-bottom: .35rem; }
+.dynamic-brand__sigla { height: 74px; width: auto; filter: brightness(0) invert(1); }
+.dynamic-brand__year { font-size: clamp(2.6rem, 6vw, 3.8rem); font-weight: 900; color: var(--naranja); letter-spacing: -.02em; line-height: 1; }
+.dynamic-brand__name { font-size: clamp(1.1rem, 2.4vw, 1.45rem); font-weight: 900; color: #fff; line-height: 1.25; max-width: 520px; }
+.dynamic-brand__sub { font-size: .9rem; color: rgba(255, 255, 255, .82); margin-top: .25rem; font-weight: 700; }
+.dynamic-brand--footer { align-items: flex-start; padding: .85rem 1.1rem; margin-bottom: .75rem; }
+.dynamic-brand--footer .dynamic-brand__sigla { height: 42px; }
+.dynamic-brand--footer .dynamic-brand__year { font-size: 2rem; }
+.dynamic-brand--footer .dynamic-brand__name { font-size: 1rem; text-align: left; }
+
+/* Animaciones suaves y elegantes del Hero */
 @keyframes subir { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.hero__inner > * { animation: subir .7s cubic-bezier(.2, .7, .2, 1) both; }
-.hero__inner > :nth-child(2) { animation-delay: .08s; }
+@keyframes flotarLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+@keyframes flotarCircuitos {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-8px) scale(1.015); }
+}
+@keyframes respirarLuz {
+    0% { opacity: .55; transform: translateX(-50%) scale(.95); }
+    100% { opacity: .95; transform: translateX(-50%) scale(1.06); }
+}
+@keyframes pulsoDot {
+    0% { box-shadow: 0 0 0 0 rgba(240, 112, 25, .75); }
+    70% { box-shadow: 0 0 0 8px rgba(240, 112, 25, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(240, 112, 25, 0); }
+}
+.hero__inner > :not(.hero__logo) { animation: subir .7s cubic-bezier(.2, .7, .2, 1) both; }
 .hero__inner > :nth-child(3) { animation-delay: .16s; }
 .hero__inner > :nth-child(4) { animation-delay: .24s; }
 .hero__inner > :nth-child(5) { animation-delay: .32s; }

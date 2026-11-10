@@ -22,20 +22,79 @@ class CongressSettingController extends Controller
     public function updateSettings(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'settings'   => ['required', 'array'],
-            'settings.*' => ['nullable', 'string', 'max:1000'],
+            'settings'        => ['required', 'array'],
+            'settings.*'      => ['nullable', 'string', 'max:1000'],
+            'logo_white_file' => ['nullable', 'file', 'mimes:png,jpg,jpeg,webp,svg', 'max:4096'],
+            'logo_sigla_file' => ['nullable', 'file', 'mimes:png,jpg,jpeg,webp,svg', 'max:4096'],
+            'reset_logos'     => ['nullable', 'boolean'],
         ]);
 
+        $labels = [
+            'event_name'          => 'Nombre oficial del evento',
+            'event_year'          => 'Año de la edición (ej. 2027 o 2028)',
+            'event_edition_badge' => 'Insignia de edición en portada (ej. IV edición · 2027)',
+            'event_dates_label'   => 'Fechas de realización',
+            'event_start_iso'     => 'Fecha/hora de inicio para el reloj regresivo (formato ISO)',
+            'event_modality'      => 'Modalidad del evento',
+            'event_logo_white'    => 'Logo principal blanco (Banner y Pie de página)',
+            'event_logo_sigla'    => 'Logo sigla barra superior e ícono',
+        ];
+
         foreach ($data['settings'] as $key => $value) {
-            CongressSetting::where('key', $key)->update([
-                'value' => $value !== null ? trim($value) : '',
-            ]);
+            $existing = CongressSetting::where('key', $key)->first();
+            if ($existing) {
+                $existing->update(['value' => $value !== null ? trim($value) : '']);
+            } else {
+                CongressSetting::create([
+                    'key'   => $key,
+                    'label' => $labels[$key] ?? $key,
+                    'value' => $value !== null ? trim($value) : '',
+                    'group' => str_starts_with($key, 'event_logo') ? 'identidad' : 'general',
+                ]);
+            }
+        }
+
+        // Subida directa de logos institucionales a public/images/custom/ (funciona sin depender de symlinks)
+        $customDir = public_path('images/custom');
+        if (! is_dir($customDir)) {
+            @mkdir($customDir, 0775, true);
+        }
+
+        if ($request->boolean('reset_logos')) {
+            CongressSetting::updateOrCreate(
+                ['key' => 'event_logo_white'],
+                ['label' => $labels['event_logo_white'], 'value' => '', 'group' => 'identidad']
+            );
+            CongressSetting::updateOrCreate(
+                ['key' => 'event_logo_sigla'],
+                ['label' => $labels['event_logo_sigla'], 'value' => '/images/cici-sigla.png', 'group' => 'identidad']
+            );
+        }
+
+        if ($request->hasFile('logo_white_file')) {
+            $file     = $request->file('logo_white_file');
+            $filename = 'logo-hero-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move($customDir, $filename);
+            CongressSetting::updateOrCreate(
+                ['key' => 'event_logo_white'],
+                ['label' => $labels['event_logo_white'], 'value' => '/images/custom/' . $filename, 'group' => 'identidad']
+            );
+        }
+
+        if ($request->hasFile('logo_sigla_file')) {
+            $file     = $request->file('logo_sigla_file');
+            $filename = 'logo-sigla-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move($customDir, $filename);
+            CongressSetting::updateOrCreate(
+                ['key' => 'event_logo_sigla'],
+                ['label' => $labels['event_logo_sigla'], 'value' => '/images/custom/' . $filename, 'group' => 'identidad']
+            );
         }
 
         CongressSetting::clearCache();
 
         return redirect()->route('admin.settings.index')
-            ->with('status', 'Configuración general y enlaces institucionales actualizados.');
+            ->with('status', 'Configuración general, año de edición y logos institucionales actualizados correctamente.');
     }
 
     public function storeFee(Request $request): RedirectResponse

@@ -1,11 +1,14 @@
+@php
+    $anioActual = \App\Models\CongressSetting::getValue('event_year', '2027');
+@endphp
 @extends('layouts.cici')
 
-@section('title', 'Estado de tu resumen · CICI 2027')
+@section('title', "Estado de tu resumen · CICI {$anioActual}")
 
 @section('content')
 <div class="page-hero">
     <div class="container">
-        <span class="page-hero__kicker">Consulta de postulantes · CICI 2027</span>
+        <span class="page-hero__kicker">Consulta de postulantes · CICI {{ $anioActual }}</span>
         <h1>Estado de tu resumen</h1>
         <p>Ingresa tu número de cédula (o el código de radicado) para consultar el dictamen del Comité Científico y la modalidad aprobada.</p>
     </div>

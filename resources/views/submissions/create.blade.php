@@ -1,11 +1,14 @@
+@php
+    $anioActual = \App\Models\CongressSetting::getValue('event_year', '2027');
+@endphp
 @extends('layouts.cici')
 
-@section('title', 'Enviar resumen de ponencia o póster · CICI 2027')
+@section('title', "Enviar resumen de ponencia o póster · CICI {$anioActual}")
 
 @section('content')
 <div class="page-hero">
     <div class="container">
-        <span class="page-hero__kicker">Convocatoria de ponencias · CICI 2027</span>
+        <span class="page-hero__kicker">Convocatoria de ponencias · CICI {{ $anioActual }}</span>
         <h1>Postular resumen al congreso</h1>
         <p>Envía tu propuesta para evaluación del Comité Científico. Una vez revisada, podrás consultar con tu número de cédula si fue aprobada como ponencia oral o póster.</p>
     </div>

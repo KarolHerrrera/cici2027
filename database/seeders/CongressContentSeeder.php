@@ -26,6 +26,8 @@ class CongressContentSeeder extends Seeder
             ['key' => 'event_dates_label', 'label' => 'Fechas de realización', 'value' => '14, 15 y 16 de abril de 2027', 'group' => 'general'],
             ['key' => 'event_start_iso', 'label' => 'Fecha/hora de inicio para el reloj regresivo (formato ISO)', 'value' => '2027-04-14T00:00:00-05:00', 'group' => 'general'],
             ['key' => 'event_modality', 'label' => 'Modalidad del evento', 'value' => 'Modalidad mixta · Presencial y virtual', 'group' => 'general'],
+            ['key' => 'event_logo_white', 'label' => 'Logo principal blanco (Banner y Pie de página)', 'value' => '', 'group' => 'identidad'],
+            ['key' => 'event_logo_sigla', 'label' => 'Logo sigla barra superior e ícono', 'value' => '/images/cici-sigla.png', 'group' => 'identidad'],
             ['key' => 'contact_email', 'label' => 'Correo electrónico oficial', 'value' => 'congresoingenieria@umariana.edu.co', 'group' => 'contacto'],
             ['key' => 'contact_phone', 'label' => 'Teléfono de contacto', 'value' => '318 6063123', 'group' => 'contacto'],
             ['key' => 'contact_address', 'label' => 'Dirección física', 'value' => 'Calle 18 No. 34-104 · Campus Universitario Alvernia, San Juan de Pasto - Nariño, Colombia', 'group' => 'contacto'],

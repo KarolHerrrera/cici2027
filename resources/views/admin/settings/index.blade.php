@@ -3,10 +3,10 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Configuración General, Enlaces y Tarifas · CICI 2027
+                    Configuración General, Identidad Visual, Enlaces y Tarifas
                 </h2>
                 <p class="text-sm text-gray-500">
-                    RF-01 y RF-06 · Administra la información institucional, los enlaces de formularios/plantillas y los valores de inscripción.
+                    RF-01 y RF-06 · Administra el año de la edición (ej. 2027 → 2028), los logos oficiales, enlaces y valores de inscripción.
                 </p>
             </div>
             <a href="{{ route('dashboard') }}" class="text-sm text-indigo-600 hover:underline">← Volver al Panel</a>
@@ -21,16 +21,56 @@
                 </div>
             @endif
 
-            {{-- Parámetros institucionales y enlaces --}}
+            {{-- Parámetros institucionales, Logos y Cambio de Edición (2027 -> 2028) --}}
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <h3 class="font-semibold text-lg text-gray-900 mb-1">Parámetros Institucionales y Enlaces Oficiales</h3>
-                <p class="text-sm text-gray-500 mb-6">
-                    Si dejas vacío el enlace de <strong>Plantilla de póster</strong> o <strong>Convocatoria</strong>, el sitio público mostrará automáticamente <em>«Próximamente»</em> sin enlaces rotos.
-                </p>
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h3 class="font-semibold text-lg text-gray-900">Parámetros Institucionales, Edición y Logos Oficiales</h3>
+                        <p class="text-sm text-gray-500">
+                            Desde aquí puedes cambiar toda la plataforma de <strong>2027 a 2028</strong> (año, edición, nombre, fechas y logos) sin tocar código.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="fillEditionPreset('2028')"
+                                class="px-3 py-1.5 bg-amber-50 border border-amber-300 text-amber-800 rounded-md text-xs font-semibold hover:bg-amber-100">
+                            ⚡ Autocompletar ejemplo CICI 2028 (V Edición)
+                        </button>
+                        <button type="button" onclick="fillEditionPreset('2027')"
+                                class="px-3 py-1.5 bg-slate-100 border border-slate-300 text-slate-700 rounded-md text-xs font-semibold hover:bg-slate-200">
+                            ↺ Restaurar datos oficiales CICI 2027 (IV Edición)
+                        </button>
+                    </div>
+                </div>
 
-                <form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-5">
+                <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     @method('PUT')
+
+                    {{-- Subida de Logos Institucionales --}}
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 grid gap-5 sm:grid-cols-2">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-700 mb-1">
+                                Subir nuevo Logo Principal Blanco (Banner Hero y Pie de página)
+                            </label>
+                            <input type="file" name="logo_white_file" accept=".png,.jpg,.jpeg,.webp,.svg"
+                                   class="block w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            <p class="text-xs text-gray-500 mt-1">
+                                Opcional (PNG/SVG transparente). Si cambias el año a <strong>2028</strong> sin subir archivo, el banner adapta el logo automáticamente con el nuevo año.
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-700 mb-1">
+                                Subir nuevo Logo Sigla (Barra de navegación superior e ícono)
+                            </label>
+                            <input type="file" name="logo_sigla_file" accept=".png,.jpg,.jpeg,.webp,.svg"
+                                   class="block w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            <label class="inline-flex items-center gap-2 mt-2 text-xs text-gray-600 cursor-pointer">
+                                <input type="checkbox" name="reset_logos" value="1" class="rounded border-gray-300 text-indigo-600">
+                                Restaurar los logos originales por defecto
+                            </label>
+                        </div>
+                    </div>
 
                     <div class="grid gap-5 sm:grid-cols-2">
                         @foreach ($settings as $setting)
@@ -39,6 +79,7 @@
                                     {{ $setting->label }} <span class="text-gray-400 font-mono">({{ $setting->key }})</span>
                                 </label>
                                 <input type="text"
+                                       id="setting_{{ $setting->key }}"
                                        name="settings[{{ $setting->key }}]"
                                        value="{{ old('settings.' . $setting->key, $setting->value) }}"
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
@@ -48,11 +89,38 @@
 
                     <div class="pt-3 flex justify-end">
                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white rounded-md text-xs font-semibold uppercase tracking-widest hover:bg-indigo-700">
-                            Guardar configuración general
+                            Guardar configuración general y logos
                         </button>
                     </div>
                 </form>
             </div>
+
+            <script>
+                function fillEditionPreset(year) {
+                    const presets = {
+                        '2028': {
+                            event_name: 'V Congreso Internacional de Ciencia e Ingeniería',
+                            event_year: '2028',
+                            event_edition_badge: 'V edición · 2028',
+                            event_dates_label: '12, 13 y 14 de abril de 2028',
+                            event_start_iso: '2028-04-12T00:00:00-05:00'
+                        },
+                        '2027': {
+                            event_name: 'IV Congreso Internacional de Ciencia e Ingeniería',
+                            event_year: '2027',
+                            event_edition_badge: 'IV edición · 2027',
+                            event_dates_label: '14, 15 y 16 de abril de 2027',
+                            event_start_iso: '2027-04-14T00:00:00-05:00'
+                        }
+                    };
+                    const data = presets[year];
+                    if (!data) return;
+                    Object.keys(data).forEach(key => {
+                        const input = document.getElementById('setting_' + key);
+                        if (input) input.value = data[key];
+                    });
+                }
+            </script>
 
             {{-- Tarifas de Inscripción (RF-06) --}}
             <div class="grid gap-6 lg:grid-cols-3">

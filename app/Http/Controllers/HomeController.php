@@ -235,6 +235,8 @@ class HomeController extends Controller
                 'fechas'           => CongressSetting::getValue('event_dates_label', '14, 15 y 16 de abril de 2027'),
                 'modalidad'        => CongressSetting::getValue('event_modality', 'Modalidad mixta · Presencial y virtual'),
                 'inicio'           => CongressSetting::getValue('event_start_iso', '2027-04-14T00:00:00-05:00'),
+                'logo_blanco'      => CongressSetting::getValue('event_logo_white', ''),
+                'logo_sigla'       => CongressSetting::getValue('event_logo_sigla', '/images/cici-sigla.png'),
                 'cierre_resumenes' => $cierreResumenes,
                 'lema'             => 'Un espacio para conectar conocimiento, investigación, innovación y territorio.',
             ],

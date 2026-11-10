@@ -14,12 +14,14 @@
     $resumenUrl = \App\Models\CongressSetting::getValue('abstract_form_url', config('cici.abstract_form_url')) ?: route('submissions.public.create');
     $resumenExt = (bool) \App\Models\CongressSetting::getValue('abstract_form_url', config('cici.abstract_form_url'));
     $anioEvento = \App\Models\CongressSetting::getValue('event_year', '2027');
+    $logoSigla  = \App\Models\CongressSetting::getValue('event_logo_sigla', '/images/cici-sigla.png') ?: '/images/cici-sigla.png';
+    $logoSiglaUrl = str_starts_with($logoSigla, 'http') ? $logoSigla : asset(ltrim($logoSigla, '/'));
 @endphp
 
 <header class="navbar" id="navbar">
     <div class="container navbar__inner">
         <a href="{{ route('home') }}#inicio" class="navbar__brand" aria-label="CICI {{ $anioEvento }}, ir al inicio">
-            <img src="{{ asset('images/cici-sigla.png') }}" alt="CICI" width="624" height="323">
+            <img src="{{ $logoSiglaUrl }}" alt="CICI" width="624" height="323">
             <span class="navbar__year">{{ $anioEvento }}</span>
         </a>
 

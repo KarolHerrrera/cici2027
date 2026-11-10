@@ -7,13 +7,30 @@
     $fechasTexto = \App\Models\CongressSetting::getValue('event_dates_label', '14, 15 y 16 de abril de 2027');
     $modalidad   = \App\Models\CongressSetting::getValue('event_modality', 'Modalidad mixta');
     $anioEvento  = \App\Models\CongressSetting::getValue('event_year', '2027');
+    $nombreEv    = \App\Models\CongressSetting::getValue('event_name', 'IV Congreso Internacional de Ciencia e Ingeniería');
+    $logoBlanco  = \App\Models\CongressSetting::getValue('event_logo_white', '');
+    $logoSigla   = \App\Models\CongressSetting::getValue('event_logo_sigla', '/images/cici-sigla.png') ?: '/images/cici-sigla.png';
     $whatsapp    = config('cici.whatsapp_url');
 @endphp
 
 <footer class="footer">
     <div class="container footer__grid">
         <div class="footer__brand">
-            <img src="{{ asset('images/logo-blanco.png') }}" alt="Congreso Internacional de Ciencia e Ingeniería, CICI {{ $anioEvento }}" width="1049" height="316">
+            @if (!empty($logoBlanco))
+                <img src="{{ str_starts_with($logoBlanco, 'http') ? $logoBlanco : asset(ltrim($logoBlanco, '/')) }}"
+                     alt="{{ $nombreEv }}, CICI {{ $anioEvento }}" width="1049" height="316">
+            @elseif ($anioEvento === '2027')
+                <img src="{{ asset('images/logo-blanco.png') }}"
+                     alt="{{ $nombreEv }}, CICI {{ $anioEvento }}" width="1049" height="316">
+            @else
+                <div class="dynamic-brand dynamic-brand--footer">
+                    <div class="dynamic-brand__top">
+                        <img src="{{ str_starts_with($logoSigla, 'http') ? $logoSigla : asset(ltrim($logoSigla, '/')) }}" alt="CICI" class="dynamic-brand__sigla">
+                        <span class="dynamic-brand__year">{{ $anioEvento }}</span>
+                    </div>
+                    <strong class="dynamic-brand__name">{{ $nombreEv }}</strong>
+                </div>
+            @endif
             <p>Facultad de Ingeniería · Universidad Mariana<br>{{ $fechasTexto }} · {{ $modalidad }}</p>
         </div>
 

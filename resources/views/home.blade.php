@@ -12,8 +12,25 @@
     <div class="container hero__inner">
         <span class="hero__badge">{{ $evento['edicion'] ?? 'IV edición · 2027' }}</span>
 
-        <img class="hero__logo" src="{{ asset('images/logo-blanco.png') }}"
-             alt="{{ $evento['nombre'] }}, CICI {{ $evento['anio'] ?? '2027' }}" width="1049" height="316">
+        @if (!empty($evento['logo_blanco']))
+            <img class="hero__logo" src="{{ str_starts_with($evento['logo_blanco'], 'http') ? $evento['logo_blanco'] : asset(ltrim($evento['logo_blanco'], '/')) }}"
+                 alt="{{ $evento['nombre'] }}, CICI {{ $evento['anio'] ?? '2027' }}" width="1049" height="316">
+        @elseif (($evento['anio'] ?? '2027') === '2027')
+            <img class="hero__logo" src="{{ asset('images/logo-blanco.png') }}"
+                 alt="{{ $evento['nombre'] }}, CICI {{ $evento['anio'] ?? '2027' }}" width="1049" height="316">
+        @else
+            @php
+                $siglaHero = $evento['logo_sigla'] ?: '/images/cici-sigla.png';
+            @endphp
+            <div class="dynamic-brand dynamic-brand--hero hero__logo">
+                <div class="dynamic-brand__top">
+                    <img src="{{ str_starts_with($siglaHero, 'http') ? $siglaHero : asset(ltrim($siglaHero, '/')) }}" alt="CICI" class="dynamic-brand__sigla">
+                    <span class="dynamic-brand__year">{{ $evento['anio'] }}</span>
+                </div>
+                <strong class="dynamic-brand__name">{{ $evento['nombre'] }}</strong>
+                <span class="dynamic-brand__sub">Facultad de Ingeniería · Universidad Mariana</span>
+            </div>
+        @endif
 
         <p class="hero__dates">{{ $evento['fechas'] }}</p>
         <p class="hero__lead">{{ $evento['lema'] }}</p>
@@ -136,7 +153,7 @@
 <section class="section section--alt" id="ponentes">
     <div class="container">
         <x-section-title title="Ponentes invitados"
-            subtitle="Conoce a los profesionales e investigadores invitados al IV Congreso Internacional de Ciencia e Ingeniería – CICI 2027." />
+            subtitle="Conoce a los profesionales e investigadores invitados al {{ $evento['nombre'] }} – CICI {{ $evento['anio'] ?? '2027' }}." />
 
         <div class="grid grid--3">
             @foreach ($ponentes as $idx => $p)
@@ -183,14 +200,14 @@
 <section class="section section--dark" id="programa">
     <div class="container">
         <x-section-title title="Programa del Congreso"
-            subtitle="Agenda académica por jornada, horario y espacio del CICI 2027." />
+            subtitle="Agenda académica por jornada, horario y espacio del CICI {{ $evento['anio'] ?? '2027' }}." />
 
         <div class="grid grid--3">
             @foreach ($jornadas as $j)
                 <article class="day">
                     <span class="day__name">{{ $j['dia'] }}</span>
                     <span class="day__num">{{ $j['numero'] }}</span>
-                    <span class="day__month">{{ $j['mes'] }} de 2027</span>
+                    <span class="day__month">{{ $j['mes'] }} de {{ $evento['anio'] ?? '2027' }}</span>
                     <p>Conferencias magistrales, ponencias orales, pósteres y paneles académicos.</p>
                 </article>
             @endforeach
@@ -230,7 +247,7 @@
         @endif
 
         <p class="note note--dark" style="margin-top: 1.5rem; font-size: .88rem; color: rgba(255,255,255,.78);">
-            La programación está sujeta a ajustes por parte del comité organizador y académico del CICI 2027.
+            La programación está sujeta a ajustes por parte del comité organizador y académico del CICI {{ $evento['anio'] ?? '2027' }}.
         </p>
     </div>
 </section>
@@ -238,8 +255,8 @@
 {{-- ================= INSCRIPCIONES ================= --}}
 <section class="section" id="inscripciones">
     <div class="container">
-        <x-section-title title="Participa en el CICI 2027"
-            subtitle="Estos son los valores de inscripción establecidos para el IV Congreso Internacional de Ciencia e Ingeniería – CICI 2027." />
+        <x-section-title title="Participa en el CICI {{ $evento['anio'] ?? '2027' }}"
+            subtitle="Estos son los valores de inscripción establecidos para el {{ $evento['nombre'] }} – CICI {{ $evento['anio'] ?? '2027' }}." />
 
         <div class="grid grid--4 prices">
             @foreach ($tarifas as $t)
@@ -285,7 +302,7 @@
 {{-- ================= DOCUMENTOS ================= --}}
 <section class="section" id="documentos">
     <div class="container container--narrow">
-        <x-section-title title="Documentos del CICI 2027"
+        <x-section-title title="Documentos del CICI {{ $evento['anio'] ?? '2027' }}"
             subtitle="Aquí se publican los documentos oficiales del Congreso a medida que son habilitados por la organización." />
 
         <ul class="docs">
@@ -437,7 +454,7 @@
 {{-- ================= CONTACTO (RF-13) ================= --}}
 <section class="section" id="contacto">
     <div class="container">
-        <x-section-title title="Conéctate con CICI 2027"
+        <x-section-title title="Conéctate con CICI {{ $evento['anio'] ?? '2027' }}"
             subtitle="Canales oficiales de atención y mesa de ayuda para ponentes, estudiantes y asistentes." />
 
         <div class="grid grid--3 contact" style="margin-bottom: 2.5rem;">
