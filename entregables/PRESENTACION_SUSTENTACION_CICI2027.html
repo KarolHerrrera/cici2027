@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación de Sustentación — Plataforma Web CICI 2027 · Universidad Mariana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul: #0a2f66;
+            --azul-claro: #126aa6;
+            --verde: #2fae7b;
+            --naranja: #f07019;
+            --tinta: #142238;
+            --fondo: #f3f6fb;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Lato', system-ui, -apple-system, sans-serif;
+            background: #071d40;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .deck {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 48px 72px 84px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            background: radial-gradient(ellipse 85% 70% at 50% 30%, #166bb0 0%, #0b3f86 55%, #07224d 100%);
+        }
+        .slide.is-active {
+            display: flex;
+            animation: fadeSlide .38s cubic-bezier(.2,.7,.2,1);
+        }
+        .slide--light {
+            background: linear-gradient(160deg, #ffffff 0%, #f1f6fc 100%);
+            color: var(--tinta);
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: none; }
+        }
+        .speaker-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            align-self: flex-start;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: .88rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 18px;
+            background: rgba(240, 112, 25, .2);
+            border: 1px solid rgba(240, 112, 25, .6);
+            color: #ffb07b;
+        }
+        .slide--light .speaker-tag {
+            background: rgba(18, 106, 166, .1);
+            border-color: rgba(18, 106, 166, .35);
+            color: var(--azul);
+        }
+        h1 {
+            font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1.12;
+            margin: 0 0 18px;
+        }
+        h2 {
+            font-size: clamp(1.8rem, 3.2vw, 2.55rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin: 0 0 22px;
+        }
+        h2::after {
+            content: '.';
+            color: var(--naranja);
+        }
+        .lead {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            opacity: .92;
+            max-width: 880px;
+            margin: 0 0 28px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+        .box {
+            background: rgba(255, 255, 255, .09);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 18px;
+            padding: 22px 24px;
+            backdrop-filter: blur(8px);
+        }
+        .slide--light .box {
+            background: #fff;
+            border: 1px solid #dbe3ee;
+            box-shadow: 0 12px 30px rgba(10, 47, 102, .07);
+        }
+        .box h3 {
+            margin: 0 0 8px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+        }
+        .slide--light .box h3 { color: var(--azul); }
+        .box p, .box li {
+            margin: 0;
+            font-size: .98rem;
+            line-height: 1.5;
+            opacity: .92;
+        }
+        .box ul {
+            margin: 8px 0 0;
+            padding-left: 18px;
+        }
+        .box li { margin-bottom: 6px; }
+        .stat {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--naranja);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .badge-green {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: var(--verde);
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(7, 29, 64, .94);
+            border-top: 1px solid rgba(255,255,255,.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 50;
+        }
+        .controls__btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-nav {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,.25);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: .88rem;
+        }
+        .btn-nav:hover { background: var(--naranja); border-color: var(--naranja); }
+        .progress {
+            font-weight: 700;
+            font-size: .92rem;
+            color: #cbd5e1;
+        }
+        code {
+            background: rgba(15, 23, 42, .12);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: 700;
+        }
+        @media print {
+            body { overflow: visible; height: auto; background: #fff; }
+            .controls { display: none; }
+            .deck { position: static; }
+            .slide {
+                position: static;
+                display: flex !important;
+                min-height: 100vh;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+    <!-- DIAPOSITIVA 1: PORTADA -->
+    <section class="slide is-active">
+        <span class="speaker-tag">🎙️ Apertura · Presentación del Equipo (4 Integrantes)</span>
+        <h1>Plataforma Web Oficial<br>CICI 2027 · Universidad Mariana</h1>
+        <p class="lead">
+            Sistema web autoadministrable para la difusión institucional, evaluación del Comité Científico, dictamen de modalidades (Ponencia Oral / Póster) y consulta pública por documento de identidad.
+        </p>
+        <div class="grid-4" style="margin-top: 16px;">
+            <div class="box">
+                <span class="badge-green">Integrante 1</span>
+                <h3>Contexto e Identidad</h3>
+                <p>Problemática, diseño institucional propio (no genérico) y portal público oficial.</p>
+            </div>
+            <div class="box">
+                <span class="badge-green">Integrante 2</span>
+                <h3>Comité y Cédula</h3>
+                <p>Flujo de arbitraje científico (Oral/Póster) y consulta pública sin contraseña.</p>
+            </div>
+            <div class="box">
+                <span class="badge-green">Integrante 3</span>
+                <h3>Panel Admin y 2028</h3>
+                <p>Módulos dinámicos (RF-01 a RF-16) y transición 2027 → 2028 en 1 clic.</p>
+            </div>
+            <div class="box">
+                <span class="badge-green">Integrante 4</span>
+                <h3>Arquitectura y Calidad</h3>
+                <p>Base de datos (16 tablas), soporte para 2.000 usuarios, 34 tests y nube Render.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 2: INTEGRANTE 1 - PROBLEMÁTICA E IDENTIDAD VISUAL -->
+    <section class="slide slide--light">
+        <span class="speaker-tag">🎙️ Integrante 1 · Problemática e Identidad Institucional</span>
+        <h2>¿Qué problema resolvemos para la Facultad de Ingeniería?</h2>
+        <div class="grid-2">
+            <div class="box">
+                <h3>Situación Anterior (Sitio Estático)</h3>
+                <ul>
+                    <li>Cada cambio en ponentes, horarios, fechas o documentos exigía editar código HTML manualmente y volver a subir archivos al servidor.</li>
+                    <li>Los postulantes no tenían cómo consultar en línea si su resumen fue aprobado como <strong>Ponencia Oral</strong> o <strong>Póster</strong>.</li>
+                    <li>Para la siguiente edición (ej. <strong>CICI 2028</strong>) había que rehacer la página desde cero.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Nuestra Solución (CICI 2027 Dinámico)</h3>
+                <ul>
+                    <li><strong>Identidad Visual 100 % Institucional (No genérica de IA):</strong> Respeta fielmente la paleta azul mariano (<code>#0a2f66</code>), verde (<code>#2fae7b</code>), naranja (<code>#f07019</code>) y tipografía <em>Lato</em> oficial de <code>cici.umariana.edu.co</code>.</li>
+                    <li><strong>Sincronizado con las últimas publicaciones oficiales:</strong> Incluye los 7 ponentes (con el Dr. Mauricio Alvarado Bueno), el PDF de Términos de Referencia y la agenda de 3 días.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 3: INTEGRANTE 1 - PORTAL PÚBLICO -->
+    <section class="slide">
+        <span class="speaker-tag">🎙️ Integrante 1 · Recorrido por el Portal Público</span>
+        <h2>Portal Público Completo y Fácil de Usar</h2>
+        <div class="grid-3">
+            <div class="box">
+                <div class="stat">6 Ejes</div>
+                <h3>34 Líneas Temáticas</h3>
+                <p>5 ejes disciplinares de ingeniería + 1 eje transversal de Inteligencia Artificial Aplicada e Innovación Digital.</p>
+            </div>
+            <div class="box">
+                <div class="stat">7 Ponentes</div>
+                <h3>4 Países Invitados</h3>
+                <p>Estados Unidos, México, Ecuador y Colombia con fotografía oficial, hoja de vida desplegable y título de conferencia.</p>
+            </div>
+            <div class="box">
+                <div class="stat">3 Jornadas</div>
+                <h3>15 Bloques Académicos</h3>
+                <p>Agenda oficial del 14, 15 y 16 de abril de 2027 por horario y auditorio, más descarga del PDF de Términos de Referencia.</p>
+            </div>
+        </div>
+        <div class="box" style="margin-top: 22px;">
+            <h3>Secciones adicionales integradas en portada</h3>
+            <p>Reloj regresivo en tiempo real · Tarifas oficiales conectadas a SGA Campus · Noticias y Comunicados · Comité Directivo y Científico · Galería Histórica (I, II y III CICI) · Universidades Aliadas · Preguntas Frecuentes (FAQ) y Mesa de Ayuda.</p>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 4: INTEGRANTE 2 - CONSULTA PÚBLICA POR CÉDULA -->
+    <section class="slide slide--light">
+        <span class="speaker-tag">🎙️ Integrante 2 · Experiencia del Postulante (RF-16)</span>
+        <h2>Consulta Pública de Estado solo con Número de Cédula</h2>
+        <p class="lead" style="color:#334155;">
+            El autor no necesita crear cuenta ni recordar contraseña: ingresa su número de documento en <code>/estado-resumen</code> y conoce al instante el dictamen del Comité Científico.
+        </p>
+        <div class="grid-3">
+            <div class="box">
+                <span class="badge-green" style="background:#059669;">Cédula: 1085200101</span>
+                <h3>Aprobado · Póster</h3>
+                <p>Muestra barra de progreso completada, puntaje (90/100), observaciones del comité y habilita el botón de descarga de <strong>Plantilla Oficial de Póster</strong>.</p>
+            </div>
+            <div class="box">
+                <span class="badge-green" style="background:#0284c7;">Cédula: 1085200202</span>
+                <h3>Aprobado · Ponencia Oral</h3>
+                <p>Informa aprobación en modalidad Ponencia Oral (puntaje 95/100) y enlaza al pago de inscripción en SGA Campus.</p>
+            </div>
+            <div class="box">
+                <span class="badge-green" style="background:#d97706;">Cédula: 1085200303</span>
+                <h3>En Revisión</h3>
+                <p>Indica que la propuesta fue recibida y se encuentra asignada a un par evaluador del Comité Científico.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 5: INTEGRANTE 2 - PANEL DEL COMITÉ CIENTÍFICO -->
+    <section class="slide">
+        <span class="speaker-tag">🎙️ Integrante 2 · Panel del Comité Científico (Demo en Vivo)</span>
+        <h2>Módulo de Evaluación del Comité Científico (<code>/comite/resumenes</code>)</h2>
+        <div class="grid-2">
+            <div class="box">
+                <h3>Funciones del Evaluador y Líder (<code>comite@cici.test</code>)</h3>
+                <ul>
+                    <li>Filtrado instantáneo por estado, eje temático, modalidad solicitada o búsqueda por cédula/título.</li>
+                    <li><strong>Regla de negocio validada:</strong> Para aprobar un resumen es obligatorio definir la modalidad final aprobada (<strong>Ponencia Oral</strong> o <strong>Póster</strong>).</li>
+                    <li>Registro de calificación numérica (0 a 100), comentarios visibles para el autor y notas internas privadas.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Rol de Líder del Comité Científico</h3>
+                <ul>
+                    <li>Asignación de resúmenes a pares evaluadores según su especialidad e ingeniería.</li>
+                    <li>Creación de nuevos miembros del Comité Científico desde la plataforma.</li>
+                    <li>Registro automático de fecha de revisión y notificación al postulante.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 6: INTEGRANTE 3 - PANEL ADMINISTRATIVO Y RF-01 A RF-16 -->
+    <section class="slide slide--light">
+        <span class="speaker-tag">🎙️ Integrante 3 · Panel de Administración General (RF-01 a RF-16)</span>
+        <h2>Autoadministración Total sin Tocar Código (<code>/admin</code>)</h2>
+        <div class="grid-3">
+            <div class="box">
+                <h3>Académico y Agenda</h3>
+                <ul>
+                    <li><strong>Ponentes:</strong> Fotos, país, bio y charla.</li>
+                    <li><strong>Ejes y Subtemas:</strong> 6 ejes y 34 líneas.</li>
+                    <li><strong>Fechas y Programa:</strong> Bloques por día, hora y auditorio.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Documentos y Difusión</h3>
+                <ul>
+                    <li><strong>Documentos (RF-07):</strong> Subida de PDFs o estado <em>«Próximamente»</em>.</li>
+                    <li><strong>Noticias (RF-08):</strong> Comunicados oficiales.</li>
+                    <li><strong>Tarifas (RF-06):</strong> Valores en COP.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Institucional y Soporte</h3>
+                <ul>
+                    <li><strong>Comité, Galería y Aliados:</strong> Visibles en portada.</li>
+                    <li><strong>Preguntas Frecuentes (FAQ).</strong></li>
+                    <li><strong>Mesa de Ayuda (RF-13):</strong> Bandeja de mensajes recibidos.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 7: INTEGRANTE 3 - CAMBIO DE EDICIÓN 2027 A 2028 -->
+    <section class="slide">
+        <span class="speaker-tag">🎙️ Integrante 3 · Escalabilidad para Futuras Ediciones (Demo en Vivo)</span>
+        <h2>Transición de CICI 2027 a CICI 2028 y Cambio de Logos en 1 Clic</h2>
+        <p class="lead">
+            Diseñamos la plataforma pensando en la continuidad de la Universidad Mariana: cuando termine la edición 2027, el administrador puede actualizar el portal a <strong>CICI 2028 (V Edición)</strong> desde <code>/admin/configuracion</code>.
+        </p>
+        <div class="grid-2">
+            <div class="box">
+                <h3>¿Qué se actualiza desde el Panel Admin?</h3>
+                <ul>
+                    <li><strong>Año y Edición:</strong> Cambia automáticamente el año en la barra superior, títulos de sección, programa, pie de página y pestaña del navegador.</li>
+                    <li><strong>Reloj Regresivo:</strong> Se recalcula al instante con la nueva fecha ISO de 2028.</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Subida de Logos e Identidad Adaptativa</h3>
+                <ul>
+                    <li>Permite subir desde el navegador el nuevo <strong>Logo Blanco Principal</strong> y el <strong>Logo Sigla</strong>.</li>
+                    <li>Si se cambia el año a <strong>2028</strong> antes de diseñar un nuevo PNG, el banner adapta dinámicamente el emblema oficial para mostrar <strong>CICI 2028</strong>.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 8: INTEGRANTE 4 - ARQUITECTURA, RENDIMIENTO Y CERO BUGS -->
+    <section class="slide slide--light">
+        <span class="speaker-tag">🎙️ Integrante 4 · Arquitectura, Seguridad y Pruebas Automatizadas</span>
+        <h2>Calidad de Software: 34 Pruebas Automatizadas y Soporte para 2.000 Usuarios</h2>
+        <div class="grid-3">
+            <div class="box">
+                <div class="stat">16 Tablas</div>
+                <h3>Modelo Relacional</h3>
+                <p>Base de datos normalizada con llaves foráneas e índices compuestos en <code>submissions(document, status)</code> y agenda.</p>
+            </div>
+            <div class="box">
+                <div class="stat">2.000+</div>
+                <h3>Usuarios Concurrentes</h3>
+                <p>Caché inteligente (<code>PortalCache</code>) con invalidación automática al editar datos en el panel administrativo.</p>
+            </div>
+            <div class="box">
+                <div class="stat">34 Tests</div>
+                <h3>130 Aserciones (0 Bugs)</h3>
+                <p>Suite PHPUnit que verifica login, roles, dictamen de comité, consulta por cédula, módulos admin y cabeceras HTTP.</p>
+            </div>
+        </div>
+        <div class="box" style="margin-top: 22px;">
+            <h3>Despliegue Listo para la Nube (Render) y Servidor de la Universidad Mariana</h3>
+            <p>Contenedor Docker con autodetección de PostgreSQL/SQLite, ejecución automática de migraciones y <em>seeders</em> idempotentes (<code>updateOrCreate</code>) y documentación técnica completa con diagramas ERD y Sitemap.</p>
+        </div>
+    </section>
+
+    <!-- DIAPOSITIVA 9: DEMOSTRACIÓN EN VIVO (ORDEN DE PARTICIPACIÓN) -->
+    <section class="slide">
+        <span class="speaker-tag">🚀 Demostración en Vivo · Participación de los 4 Integrantes</span>
+        <h2>Guion Rápido para la Demostración en Vivo (5 Minutos)</h2>
+        <div class="grid-2">
+            <div class="box">
+                <h3>1️⃣ Integrante 1 (Portal Público)</h3>
+                <p>Muestra el banner animado, el contador, los 7 ponentes (Dr. Mauricio Alvarado Bueno), la agenda de los 3 días y abre el PDF de Términos de Referencia.</p>
+                <h3 style="margin-top:14px;">2️⃣ Integrante 2 (Cédula y Comité Científico)</h3>
+                <p>Consulta en <code>/estado-resumen</code> la cédula <code>1085200101</code> (Póster) y entra con <code>comite@cici.test</code> a <code>/comite/resumenes</code> para evaluar un resumen.</p>
+            </div>
+            <div class="box">
+                <h3>3️⃣ Integrante 3 (Panel Admin y Cambio a 2028)</h3>
+                <p>Entra con <code>admin@cici.test</code> a <code>/admin/configuracion</code>, pulsa <strong>«⚡ Autocompletar ejemplo CICI 2028»</strong>, guarda y muestra cómo toda la web pasa a 2028 (y la restaura a 2027).</p>
+                <h3 style="margin-top:14px;">4️⃣ Integrante 4 (Pruebas, BD y Despliegue)</h3>
+                <p>Muestra el Diagrama Entidad-Relación en la documentación, la ejecución de los 34 tests en verde y el despliegue activo en Render.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="controls">
+    <div class="progress" id="slideCounter">Diapositiva 1 de 9 · Usa las flechas ◀ ▶ del teclado</div>
+    <div class="controls__btns">
+        <button class="btn-nav" onclick="prevSlide()">◀ Anterior</button>
+        <button class="btn-nav" onclick="nextSlide()">Siguiente ▶</button>
+        <button class="btn-nav" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
+        <button class="btn-nav" onclick="window.print()">🖨️ Guardar PDF</button>
+    </div>
+</div>
+
+<script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counter = document.getElementById('slideCounter');
+    let current = 0;
+
+    function showSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= slides.length) index = slides.length - 1;
+        slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+        current = index;
+        counter.textContent = `Diapositiva ${current + 1} de ${slides.length} · Usa las flechas ◀ ▶ del teclado`;
+    }
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+            e.preventDefault();
+            nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            prevSlide();
+        }
+    });
+</script>
+
+</body>
+</html>

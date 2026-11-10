@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica y Funcional — Plataforma Web Oficial CICI 2027 · Universidad Mariana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+    <style>
+        :root {
+            --azul: #0a2f66;
+            --azul-claro: #126aa6;
+            --verde: #2fae7b;
+            --naranja: #f07019;
+            --tinta: #142238;
+            --texto: #334155;
+            --borde: #dbe3ee;
+            --fondo: #f8fafc;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Lato', system-ui, -apple-system, sans-serif;
+            color: var(--tinta);
+            background: var(--fondo);
+            line-height: 1.6;
+        }
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--azul);
+            color: #fff;
+            padding: 12px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 16px rgba(10, 47, 102, .2);
+        }
+        .toolbar button {
+            background: var(--naranja);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: .92rem;
+        }
+        .toolbar button:hover { background: #d95f0e; }
+        .page {
+            max-width: 980px;
+            margin: 28px auto;
+            background: #fff;
+            padding: 56px 64px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(10, 47, 102, .08);
+        }
+        .cover {
+            text-align: center;
+            padding: 48px 24px 56px;
+            border-bottom: 4px solid var(--azul);
+            margin-bottom: 42px;
+        }
+        .cover__uni {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--azul-claro);
+        }
+        .cover__fac {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--texto);
+            margin-top: 4px;
+        }
+        .cover__title {
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--azul);
+            margin: 28px 0 12px;
+            line-height: 1.2;
+        }
+        .cover__subtitle {
+            font-size: 1.15rem;
+            color: var(--texto);
+            max-width: 720px;
+            margin: 0 auto 32px;
+        }
+        .cover__badge {
+            display: inline-block;
+            padding: 6px 18px;
+            background: rgba(240, 112, 25, .12);
+            color: #c25100;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .9rem;
+            margin-bottom: 24px;
+        }
+        .cover__meta {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            text-align: left;
+            background: var(--fondo);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--borde);
+        }
+        h2 {
+            color: var(--azul);
+            font-size: 1.55rem;
+            font-weight: 900;
+            border-left: 5px solid var(--naranja);
+            padding-left: 14px;
+            margin-top: 42px;
+            margin-bottom: 16px;
+        }
+        h3 {
+            color: var(--azul-claro);
+            font-size: 1.18rem;
+            margin-top: 24px;
+            margin-bottom: 10px;
+        }
+        p, li { color: var(--texto); font-size: .98rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0 26px;
+            font-size: .92rem;
+        }
+        th, td {
+            border: 1px solid var(--borde);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: var(--azul);
+            color: #fff;
+            font-weight: 700;
+        }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .pill-ok {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 700;
+            font-size: .8rem;
+        }
+        .callout {
+            background: #f0f7ff;
+            border-left: 4px solid var(--azul-claro);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+        .diagram-box {
+            background: #fff;
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: .88rem;
+            color: #0f172a;
+        }
+        @media print {
+            .toolbar { display: none; }
+            body { background: #fff; }
+            .page { box-shadow: none; margin: 0; padding: 20px; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <div>
+        <strong>Documentación Técnica Oficial · CICI 2027 (Universidad Mariana)</strong>
+        <span style="opacity:.85; font-size:.88rem; margin-left:10px;">Lista para exportar a PDF o entregar al jurado</span>
+    </div>
+    <button onclick="window.print()">🖨️ Guardar como PDF / Imprimir</button>
+</div>
+
+<div class="page">
+    <div class="cover">
+        <div class="cover__uni">Universidad Mariana · San Juan de Pasto</div>
+        <div class="cover__fac">Facultad de Ingeniería · Programa de Ingeniería de Sistemas</div>
+        <div style="margin-top:18px;">
+            <span class="cover__badge">Documento Técnico y Funcional de Ingeniería de Software</span>
+        </div>
+        <h1 class="cover__title">Plataforma Web Oficial del IV Congreso Internacional de Ciencia e Ingeniería (CICI 2027)</h1>
+        <p class="cover__subtitle">
+            Sistema web dinámico, autoadministrable y escalable para la difusión institucional, gestión del Comité Científico, dictamen de resúmenes (Ponencia Oral / Póster) y consulta pública de estado por documento de identidad.
+        </p>
+
+        <div class="cover__meta">
+            <div>
+                <strong>Equipo de Desarrollo (4 Integrantes):</strong><br>
+                • Integrante 1: Arquitectura, Base de Datos y Despliegue Cloud<br>
+                • Integrante 2: Portal Público Institucional y Sincronización Oficial<br>
+                • Integrante 3: Módulo de Comité Científico y Consulta por Cédula<br>
+                • Integrante 4: Panel Administrativo (RF-01 a RF-16), Seguridad y Pruebas
+            </div>
+            <div>
+                <strong>Stack Tecnológico y Entorno:</strong><br>
+                • Backend: PHP 8.4 · Laravel 12 (Arquitectura MVC)<br>
+                • Base de Datos: PostgreSQL (Producción/Render) y SQLite (Local)<br>
+                • Frontend: Blade, CSS Institucional a Medida (No genérico), Vite<br>
+                • Calidad: 34 Pruebas Automatizadas PHPUnit (130 aserciones)<br>
+                • Sitio de referencia: <code>https://cici.umariana.edu.co/</code>
+            </div>
+        </div>
+    </div>
+
+    <h2>1. Planteamiento del Problema y Solución Desarrollada</h2>
+    <p>
+        El <strong>Congreso Internacional de Ciencia e Ingeniería (CICI)</strong> organizado por la Facultad de Ingeniería de la Universidad Mariana publicaba tradicionalmente su información en una página estática que requería modificar código HTML cada vez que cambiaba un ponente, una fecha, el programa académico o la edición del evento (por ejemplo, de 2027 a 2028). Además, los autores que enviaban sus resúmenes no contaban con un módulo de consulta rápida por número de cédula para conocer si su trabajo había sido aprobado como <strong>Ponencia Oral</strong> o <strong>Póster</strong> ni las observaciones del Comité Científico.
+    </p>
+    <div class="callout">
+        <strong>Solución implementada:</strong> Se desarrolló una plataforma web completa en Laravel 12 que conserva al 100 % la identidad visual oficial de la Universidad Mariana (evitando interfaces genéricas), permite administrar todos los contenidos sin tocar código (incluyendo el cambio de edición <strong>2027 → 2028</strong> y subida de logos desde el rol Admin), incorpora un <strong>Panel del Comité Científico</strong> para evaluar y dictaminar resúmenes, y ofrece <strong>Consulta Pública por Cédula</strong> sin necesidad de recordar contraseñas.
+    </div>
+
+    <h2>2. Credenciales de Acceso y Datos de Prueba para Evaluación</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Rol en el Sistema</th>
+                <th>Usuario / Correo</th>
+                <th>Contraseña</th>
+                <th>Ruta Principal</th>
+                <th>Alcance y Permisos</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Administrador General</strong></td>
+                <td><code>admin@cici.test</code></td>
+                <td><code>Cici2027*</code></td>
+                <td><code>/admin</code></td>
+                <td>Control total de configuración (2027↔2028), logos, tarifas, ponentes, ejes, fechas, programa, documentos, noticias, comité, galería, aliados, FAQ y mensajes.</td>
+            </tr>
+            <tr>
+                <td><strong>Líder Comité Científico</strong></td>
+                <td><code>comite@cici.test</code></td>
+                <td><code>Comite2027*</code></td>
+                <td><code>/comite/resumenes</code></td>
+                <td>Asignación de resúmenes a evaluadores, dictamen de aprobación (Oral/Póster) o rechazo, calificación y creación de nuevos miembros del comité.</td>
+            </tr>
+            <tr>
+                <td><strong>Evaluadora Comité</strong></td>
+                <td><code>evaluador@cici.test</code></td>
+                <td><code>Comite2027*</code></td>
+                <td><code>/comite/resumenes</code></td>
+                <td>Revisión académica, calificación (0-100) y dictamen de los resúmenes de su eje temático.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Cédulas de prueba para Consulta Pública (<code>/estado-resumen</code>):</strong></p>
+    <ul>
+        <li><code>1085200101</code> — <strong>Aprobado en Modalidad Póster</strong> (Ing. Camila Andrea Rosero Burbano · muestra observaciones y botón de plantilla de póster).</li>
+        <li><code>1085200202</code> — <strong>Aprobado en Ponencia Oral</strong> (Mg. Juan Sebastián Delgado Pantoja · puntaje 95/100).</li>
+        <li><code>1085200303</code> — <strong>En revisión por el Comité Científico</strong> (Ing. Diana Marcela Benavides).</li>
+    </ul>
+
+    <h2>3. Arquitectura y Diagrama Entidad-Relación (ERD)</h2>
+    <p>
+        La base de datos relacional está compuesta por <strong>16 tablas normalizadas</strong> con índices compuestos optimizados para soportar picos de hasta <strong>2.000 usuarios concurrentes</strong>:
+    </p>
+    <div class="diagram-box">
+        <pre class="mermaid">
+erDiagram
+    USERS ||--o{ SUBMISSIONS : "assigned_to / reviewed_by"
+    USERS ||--o{ CONTACT_MESSAGES : "responded_by"
+    THEMATIC_AXES ||--o{ USERS : "thematic_axis_id"
+    THEMATIC_AXES ||--o{ AXIS_TOPICS : "tiene subtemas"
+    THEMATIC_AXES ||--o{ SUBMISSIONS : "clasifica"
+    THEMATIC_AXES ||--o{ SCHEDULE_ITEMS : "asocia"
+    AXIS_TOPICS ||--o{ SUBMISSIONS : "subtema"
+
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        boolean is_admin
+        boolean is_committee
+        boolean is_committee_leader
+        bigint thematic_axis_id FK
+    }
+    THEMATIC_AXES {
+        bigint id PK
+        string name
+        boolean is_transversal
+        int sort_order
+    }
+    AXIS_TOPICS {
+        bigint id PK
+        bigint thematic_axis_id FK
+        string name
+    }
+    SPEAKERS {
+        bigint id PK
+        string name
+        string photo
+        string specialty
+        string institution
+        string country
+    }
+    IMPORTANT_DATES {
+        bigint id PK
+        string title
+        date date
+        date end_date
+        boolean is_featured
+    }
+    SUBMISSIONS {
+        bigint id PK
+        string tracking_code UK
+        string document
+        string name
+        string title
+        string requested_modality
+        string status
+        string modality
+        tinyint score
+    }
+    CONGRESS_SETTINGS {
+        bigint id PK
+        string key UK
+        text value
+        string group
+    }
+    REGISTRATION_FEES {
+        bigint id PK
+        string profile
+        bigint price_amount
+        boolean is_active
+    }
+    CONGRESS_DOCUMENTS {
+        bigint id PK
+        string slug UK
+        string title
+        string status
+    }
+    SCHEDULE_ITEMS {
+        bigint id PK
+        string day_label
+        date event_date
+        string start_time
+        string title
+        string location
+    }
+    NEWS_POSTS {
+        bigint id PK
+        string title
+        string slug UK
+        boolean is_published
+    }
+    ORGANIZER_MEMBERS {
+        bigint id PK
+        string name
+        string role
+        string committee_type
+    }
+    GALLERY_ITEMS {
+        bigint id PK
+        string edition
+        smallint year
+        string title
+    }
+    SPONSORS {
+        bigint id PK
+        string name
+        string category
+        string country
+    }
+    FAQS {
+        bigint id PK
+        string question
+        text answer
+    }
+    CONTACT_MESSAGES {
+        bigint id PK
+        string name
+        string email
+        string subject
+        string status
+    }
+        </pre>
+    </div>
+
+    <h2>4. Mapa de Navegación del Sistema (Sitemap)</h2>
+    <div class="diagram-box">
+        <pre class="mermaid">
+flowchart LR
+    P["Portal Público (/)"] --> S1["Secciones Institucionales\n#inicio, #congreso, #fechas, #ejes,\n#ponentes, #programa, #inscripciones,\n#documentos, #noticias, #contacto"]
+    P --> C["Consulta por Cédula\n(/estado-resumen)"]
+    P --> L["Inicio de Sesión\n(/login)"]
+    L --> COM["Panel Comité Científico\n(/comite/resumenes)"]
+    L --> ADM["Panel Administrador\n(/admin)"]
+    ADM --> M1["Configuración 2027↔2028, Logos y Tarifas"]
+    ADM --> M2["Ponentes, Ejes, Fechas y Programa"]
+    ADM --> M3["Documentos, Noticias, Galería, Aliados, FAQ y Mensajes"]
+        </pre>
+    </div>
+
+    <h2>5. Matriz de Cumplimiento de Requerimientos Funcionales (RF-01 a RF-16)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Requerimiento Funcional</th>
+                <th>Módulo / Controlador Laravel</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>RF-01</strong></td><td>Gestión de identidad institucional, cambio de edición (2027 → 2028) y subida de logos oficiales</td><td><code>CongressSettingController</code> · <code>/admin/configuracion</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-02</strong></td><td>Gestión de 6 ejes temáticos y 34 líneas de investigación</td><td><code>ThematicAxisController</code> · <code>/admin/ejes</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-03</strong></td><td>Cronograma de fechas importantes y reloj regresivo en vivo</td><td><code>ImportantDateController</code> · <code>/admin/fechas</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-04</strong></td><td>Programa académico por jornada, horario, conferencista y auditorio (14, 15 y 16 de abril)</td><td><code>ScheduleItemController</code> · <code>/admin/programa</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-05</strong></td><td>Directorio de 7 ponentes nacionales e internacionales con foto y perfil</td><td><code>SpeakerController</code> · <code>/admin/ponentes</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-06</strong></td><td>Modalidades de participación y tarifas oficiales en COP</td><td><code>RegistrationFee</code> · <code>/admin/configuracion</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-07</strong></td><td>Repositorio de documentos oficiales (Términos PDF, Formato de resumen, Banners)</td><td><code>CongressDocumentController</code> · <code>/admin/documentos</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-08</strong></td><td>Publicación de noticias, comunicados y novedades</td><td><code>NewsPostController</code> · <code>/admin/noticias</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-09</strong></td><td>Visualización y gestión del Comité Directivo, Científico y Organizador</td><td><code>PortalContentController</code> · <code>/admin/contenido-portal</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-10</strong></td><td>Memoria histórica de ediciones anteriores (I, II y III CICI)</td><td><code>GalleryItem</code> · <code>/admin/contenido-portal</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-11</strong></td><td>Instituciones y universidades aliadas nacionales e internacionales</td><td><code>Sponsor</code> · <code>/admin/contenido-portal</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-12</strong></td><td>Módulo de Preguntas Frecuentes (FAQ) desplegables</td><td><code>Faq</code> · <code>/admin/contenido-portal</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-13</strong></td><td>Canales de contacto y mesa de ayuda con bandeja administrativa</td><td><code>ContactController</code> · <code>/admin/mensajes</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-14</strong></td><td>Integración con pasarela de inscripción SGA Campus Universidad Mariana</td><td><code>CongressSetting</code> (<code>registration_url</code>)</td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-15</strong></td><td>Panel administrativo centralizado con control de acceso por roles</td><td><code>DashboardController</code> · Middleware <code>IsAdmin</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+            <tr><td><strong>RF-16</strong></td><td>Flujo de evaluación del Comité Científico y Consulta Pública por Cédula</td><td><code>CommitteeSubmissionController</code> · <code>SubmissionStatusController</code></td><td><span class="pill-ok">Cumplido 100%</span></td></tr>
+        </tbody>
+    </table>
+
+    <h2>6. Calidad, Seguridad, Rendimiento y Pruebas Automatizadas</h2>
+    <ul>
+        <li><strong>Identidad Visual Propia (No genérica de IA):</strong> Hoja de estilos institucional a medida (<code>public/css/cici.css</code>) fiel a los colores, tipografía <em>Lato</em>, escudos y diagramación de la Universidad Mariana.</li>
+        <li><strong>34 Pruebas Automatizadas (PHPUnit):</strong> 34 tests y 130 aserciones que validan autenticación, roles, evaluación del Comité Científico, consulta por cédula, módulos administrativos, cabeceras de seguridad y caché.</li>
+        <li><strong>Soporte para 2.000 Usuarios Concurrentes:</strong> Implementación de <code>PortalCache</code> con invalidación automática por eventos de modelo (<em>Model Observers</em>) e índices compuestos en base de datos.</li>
+        <li><strong>Despliegue Automatizado en Contenedores Docker / Render:</strong> Configuración completa en <code>Dockerfile</code>, <code>docker/entrypoint.sh</code> y <code>render.yaml</code> con autodetección de PostgreSQL/SQLite y poblado inicial garantizado.</li>
+    </ul>
+</div>
+
+</body>
+</html>
