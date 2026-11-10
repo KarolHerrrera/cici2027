@@ -146,6 +146,11 @@ class SubmissionReviewTest extends TestCase
         $this->get('/estado-resumen?documento='.$sub->tracking_code)
             ->assertOk()
             ->assertSee('Concreto reciclado');
+
+        // Consulta con una cédula no registrada no arroja error SQL y muestra aviso informativo.
+        $this->post('/estado-resumen', ['document' => '9999999999'])
+            ->assertOk()
+            ->assertSee('No encontramos resúmenes registrados');
     }
 
     public function test_admin_can_create_committee_leader_and_manage_modules(): void

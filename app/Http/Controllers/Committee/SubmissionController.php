@@ -38,14 +38,15 @@ class SubmissionController extends Controller
             ->when(in_array($modality, [Submission::MODALITY_ORAL, Submission::MODALITY_POSTER], true),
                 fn ($q) => $q->where('modality', $modality))
             ->when($search !== '', function ($q) use ($search) {
-                $norm = Submission::normalizeDocument($search);
-                $q->where(function ($sub) use ($search, $norm) {
+                $norm   = Submission::normalizeDocument($search);
+                $needle = '%' . mb_strtolower($search) . '%';
+                $q->where(function ($sub) use ($needle, $norm) {
                     $sub->where('document', 'like', "%{$norm}%")
-                        ->orWhere('tracking_code', 'like', "%{$search}%")
-                        ->orWhere('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('title', 'like', "%{$search}%")
-                        ->orWhere('institution', 'like', "%{$search}%");
+                        ->orWhereRaw('LOWER(tracking_code) LIKE ?', [$needle])
+                        ->orWhereRaw('LOWER(name) LIKE ?', [$needle])
+                        ->orWhereRaw('LOWER(email) LIKE ?', [$needle])
+                        ->orWhereRaw('LOWER(title) LIKE ?', [$needle])
+                        ->orWhereRaw('LOWER(institution) LIKE ?', [$needle]);
                 });
             })
             ->latest()
