@@ -3,488 +3,1120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentación de Sustentación — Plataforma Web CICI 2027 · Universidad Mariana</title>
+    <title>Presentación Oficial de Sustentación — Plataforma Web CICI 2027 · Universidad Mariana</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
+            --azul-oscuro: #071f46;
             --azul: #0a2f66;
-            --azul-claro: #126aa6;
+            --azul-medio: #114e91;
+            --azul-claro: #1a8fb4;
             --verde: #2fae7b;
             --naranja: #f07019;
-            --tinta: #142238;
-            --fondo: #f3f6fb;
+            --tinta: #10213a;
+            --texto: #334155;
+            --borde: #d8e2ef;
         }
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        @page {
+            size: 16in 9in;
+            margin: 0;
+        }
         body {
             margin: 0;
             font-family: 'Lato', system-ui, -apple-system, sans-serif;
-            background: #071d40;
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .deck {
-            flex: 1;
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        .slide {
-            position: absolute;
-            inset: 0;
-            padding: 48px 72px 84px;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            background: radial-gradient(ellipse 85% 70% at 50% 30%, #166bb0 0%, #0b3f86 55%, #07224d 100%);
-        }
-        .slide.is-active {
-            display: flex;
-            animation: fadeSlide .38s cubic-bezier(.2,.7,.2,1);
-        }
-        .slide--light {
-            background: linear-gradient(160deg, #ffffff 0%, #f1f6fc 100%);
+            background: #061733;
             color: var(--tinta);
+            overflow-x: hidden;
         }
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: none; }
-        }
-        .speaker-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            align-self: flex-start;
-            padding: 6px 16px;
-            border-radius: 999px;
-            font-weight: 900;
-            font-size: .88rem;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            margin-bottom: 18px;
-            background: rgba(240, 112, 25, .2);
-            border: 1px solid rgba(240, 112, 25, .6);
-            color: #ffb07b;
-        }
-        .slide--light .speaker-tag {
-            background: rgba(18, 106, 166, .1);
-            border-color: rgba(18, 106, 166, .35);
-            color: var(--azul);
-        }
-        h1 {
-            font-size: clamp(2.2rem, 4.2vw, 3.4rem);
-            font-weight: 900;
-            line-height: 1.12;
-            margin: 0 0 18px;
-        }
-        h2 {
-            font-size: clamp(1.8rem, 3.2vw, 2.55rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin: 0 0 22px;
-        }
-        h2::after {
-            content: '.';
-            color: var(--naranja);
-        }
-        .lead {
-            font-size: 1.25rem;
-            line-height: 1.5;
-            opacity: .92;
-            max-width: 880px;
-            margin: 0 0 28px;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-        }
-        .box {
-            background: rgba(255, 255, 255, .09);
-            border: 1px solid rgba(255, 255, 255, .2);
-            border-radius: 18px;
-            padding: 22px 24px;
-            backdrop-filter: blur(8px);
-        }
-        .slide--light .box {
-            background: #fff;
-            border: 1px solid #dbe3ee;
-            box-shadow: 0 12px 30px rgba(10, 47, 102, .07);
-        }
-        .box h3 {
-            margin: 0 0 8px;
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: #fff;
-        }
-        .slide--light .box h3 { color: var(--azul); }
-        .box p, .box li {
-            margin: 0;
-            font-size: .98rem;
-            line-height: 1.5;
-            opacity: .92;
-        }
-        .box ul {
-            margin: 8px 0 0;
-            padding-left: 18px;
-        }
-        .box li { margin-bottom: 6px; }
-        .stat {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--naranja);
-            line-height: 1;
-            margin-bottom: 6px;
-        }
-        .badge-green {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 999px;
-            background: var(--verde);
-            color: #fff;
-            font-size: .8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .controls {
+
+        /* Barra superior interactiva (se oculta al exportar a PDF) */
+        .topbar {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: rgba(7, 29, 64, .94);
-            border-top: 1px solid rgba(255,255,255,.15);
+            height: 54px;
+            background: rgba(7, 31, 70, 0.96);
+            border-bottom: 1px solid rgba(255,255,255,0.14);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
-            z-index: 50;
+            padding: 0 28px;
+            z-index: 1000;
+            color: #fff;
+            backdrop-filter: blur(10px);
         }
-        .controls__btns {
+        .topbar__title {
+            font-weight: 900;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topbar__title span {
+            background: var(--naranja);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: .78rem;
+        }
+        .topbar__actions {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-        .btn-nav {
-            background: rgba(255,255,255,.12);
+        .btn-ui {
+            background: rgba(255,255,255,0.12);
             color: #fff;
-            border: 1px solid rgba(255,255,255,.25);
-            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 7px 15px;
             border-radius: 999px;
             font-weight: 700;
+            font-size: .84rem;
             cursor: pointer;
+            transition: .2s;
+        }
+        .btn-ui:hover { background: var(--azul-claro); border-color: var(--azul-claro); }
+        .btn-ui--primary {
+            background: var(--naranja);
+            border-color: var(--naranja);
+        }
+        .btn-ui--primary:hover { background: #d85f0d; }
+
+        /* Contenedor de diapositivas estilo Canva (16:9) */
+        .slides-wrapper {
+            padding: 74px 24px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+        }
+        body.presentation-mode {
+            overflow: hidden;
+        }
+        body.presentation-mode .slides-wrapper {
+            padding: 0;
+            gap: 0;
+            height: 100vh;
+            justify-content: center;
+        }
+        body.presentation-mode .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        body.presentation-mode .slide.is-current {
+            display: flex;
+        }
+
+        .slide {
+            width: min(1280px, 96vw);
+            aspect-ratio: 16 / 9;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 46px 58px 38px;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Variantes de fondo estilo Canva */
+        .slide--hero {
+            background: radial-gradient(ellipse 85% 75% at 50% 32%, #1a8fb4 0%, #126aa6 38%, #0b3f86 72%, #07224d 100%);
+            color: #ffffff;
+        }
+        .slide--dark {
+            background: linear-gradient(145deg, #071f46 0%, #0b3f86 62%, #126aa6 100%);
+            color: #ffffff;
+        }
+        .slide--light {
+            background: linear-gradient(160deg, #ffffff 0%, #f2f7fc 100%);
+            color: var(--tinta);
+        }
+
+        /* Decoración geométrica institucional */
+        .slide__deco-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--azul) 0%, var(--azul-claro) 38%, var(--verde) 72%, var(--naranja) 100%);
+        }
+        .slide__orb {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            right: -120px;
+            top: -120px;
+            background: radial-gradient(circle, rgba(26, 143, 180, 0.12) 0%, rgba(47, 174, 123, 0.06) 50%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Cabecera de diapositiva */
+        .slide__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        .presenter-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: .82rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            background: rgba(17, 78, 145, 0.1);
+            color: var(--azul-medio);
+            border: 1px solid rgba(17, 78, 145, 0.25);
+        }
+        .slide--hero .presenter-pill,
+        .slide--dark .presenter-pill {
+            background: rgba(240, 112, 25, 0.22);
+            color: #ffd0b0;
+            border-color: rgba(240, 112, 25, 0.55);
+        }
+        .slide__brand-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
             font-size: .88rem;
+            opacity: .88;
         }
-        .btn-nav:hover { background: var(--naranja); border-color: var(--naranja); }
-        .progress {
-            font-weight: 700;
-            font-size: .92rem;
-            color: #cbd5e1;
+        .slide__brand-mini img {
+            height: 28px;
+            width: auto;
         }
-        code {
-            background: rgba(15, 23, 42, .12);
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-weight: 700;
+
+        /* Cuerpo de diapositiva */
+        .slide__body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
         }
+        .slide__title {
+            font-size: 2.15rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin: 0 0 8px;
+            letter-spacing: -0.015em;
+        }
+        .slide__title::after {
+            content: '.';
+            color: var(--naranja);
+        }
+        .slide__subtitle {
+            font-size: 1.05rem;
+            opacity: .86;
+            margin: 0 0 20px;
+            max-width: 980px;
+        }
+
+        /* Grillas y Tarjetas */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .grid-2-1 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 22px; }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--borde);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 8px 24px rgba(10, 47, 102, 0.06);
+            position: relative;
+        }
+        .slide--hero .card,
+        .slide--dark .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.22);
+            color: #fff;
+            box-shadow: none;
+        }
+        .card--accent-blue { border-left: 6px solid var(--azul-claro); }
+        .card--accent-green { border-left: 6px solid var(--verde); }
+        .card--accent-orange { border-left: 6px solid var(--naranja); }
+
+        .card h3 {
+            margin: 0 0 6px;
+            font-size: 1.08rem;
+            font-weight: 900;
+            color: var(--azul);
+        }
+        .slide--hero .card h3,
+        .slide--dark .card h3 {
+            color: #ffffff;
+        }
+        .card p, .card li {
+            margin: 0;
+            font-size: .9rem;
+            line-height: 1.45;
+            color: var(--texto);
+        }
+        .slide--hero .card p, .slide--hero .card li,
+        .slide--dark .card p, .slide--dark .card li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .card ul {
+            margin: 6px 0 0;
+            padding-left: 17px;
+        }
+        .card li { margin-bottom: 5px; }
+
+        .kpi {
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: var(--naranja);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: .75rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .tag--green { background: #dcfce7; color: #166534; }
+        .tag--orange { background: #ffedd5; color: #c2410c; }
+
+        /* Tablas en diapositivas */
+        .slide-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .82rem;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--borde);
+        }
+        .slide-table th {
+            background: var(--azul);
+            color: #fff;
+            padding: 8px 11px;
+            text-align: left;
+            font-weight: 800;
+        }
+        .slide-table td {
+            padding: 7px 11px;
+            border-bottom: 1px solid var(--borde);
+            color: var(--texto);
+        }
+        .slide-table tr:nth-child(even) td { background: #f8fafc; }
+
+        /* Pie de diapositiva */
+        .slide__footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: .8rem;
+            opacity: .75;
+            padding-top: 10px;
+            border-top: 1px solid rgba(148, 163, 184, 0.25);
+            position: relative;
+            z-index: 2;
+        }
+
         @media print {
-            body { overflow: visible; height: auto; background: #fff; }
-            .controls { display: none; }
-            .deck { position: static; }
+            body {
+                background: #fff !important;
+                overflow: visible !important;
+            }
+            .topbar { display: none !important; }
+            .slides-wrapper {
+                padding: 0 !important;
+                gap: 0 !important;
+                display: block !important;
+            }
             .slide {
-                position: static;
                 display: flex !important;
-                min-height: 100vh;
-                page-break-after: always;
+                width: 16in !important;
+                height: 9in !important;
+                max-width: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-after: always !important;
+                break-after: page !important;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="deck" id="deck">
-
-    <!-- DIAPOSITIVA 1: PORTADA -->
-    <section class="slide is-active">
-        <span class="speaker-tag">🎙️ Apertura · Presentación del Equipo (4 Integrantes)</span>
-        <h1>Plataforma Web Oficial<br>CICI 2027 · Universidad Mariana</h1>
-        <p class="lead">
-            Sistema web autoadministrable para la difusión institucional, evaluación del Comité Científico, dictamen de modalidades (Ponencia Oral / Póster) y consulta pública por documento de identidad.
-        </p>
-        <div class="grid-4" style="margin-top: 16px;">
-            <div class="box">
-                <span class="badge-green">Integrante 1</span>
-                <h3>Contexto e Identidad</h3>
-                <p>Problemática, diseño institucional propio (no genérico) y portal público oficial.</p>
-            </div>
-            <div class="box">
-                <span class="badge-green">Integrante 2</span>
-                <h3>Comité y Cédula</h3>
-                <p>Flujo de arbitraje científico (Oral/Póster) y consulta pública sin contraseña.</p>
-            </div>
-            <div class="box">
-                <span class="badge-green">Integrante 3</span>
-                <h3>Panel Admin y 2028</h3>
-                <p>Módulos dinámicos (RF-01 a RF-16) y transición 2027 → 2028 en 1 clic.</p>
-            </div>
-            <div class="box">
-                <span class="badge-green">Integrante 4</span>
-                <h3>Arquitectura y Calidad</h3>
-                <p>Base de datos (16 tablas), soporte para 2.000 usuarios, 34 tests y nube Render.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 2: INTEGRANTE 1 - PROBLEMÁTICA E IDENTIDAD VISUAL -->
-    <section class="slide slide--light">
-        <span class="speaker-tag">🎙️ Integrante 1 · Problemática e Identidad Institucional</span>
-        <h2>¿Qué problema resolvemos para la Facultad de Ingeniería?</h2>
-        <div class="grid-2">
-            <div class="box">
-                <h3>Situación Anterior (Sitio Estático)</h3>
-                <ul>
-                    <li>Cada cambio en ponentes, horarios, fechas o documentos exigía editar código HTML manualmente y volver a subir archivos al servidor.</li>
-                    <li>Los postulantes no tenían cómo consultar en línea si su resumen fue aprobado como <strong>Ponencia Oral</strong> o <strong>Póster</strong>.</li>
-                    <li>Para la siguiente edición (ej. <strong>CICI 2028</strong>) había que rehacer la página desde cero.</li>
-                </ul>
-            </div>
-            <div class="box">
-                <h3>Nuestra Solución (CICI 2027 Dinámico)</h3>
-                <ul>
-                    <li><strong>Identidad Visual 100 % Institucional (No genérica de IA):</strong> Respeta fielmente la paleta azul mariano (<code>#0a2f66</code>), verde (<code>#2fae7b</code>), naranja (<code>#f07019</code>) y tipografía <em>Lato</em> oficial de <code>cici.umariana.edu.co</code>.</li>
-                    <li><strong>Sincronizado con las últimas publicaciones oficiales:</strong> Incluye los 7 ponentes (con el Dr. Mauricio Alvarado Bueno), el PDF de Términos de Referencia y la agenda de 3 días.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 3: INTEGRANTE 1 - PORTAL PÚBLICO -->
-    <section class="slide">
-        <span class="speaker-tag">🎙️ Integrante 1 · Recorrido por el Portal Público</span>
-        <h2>Portal Público Completo y Fácil de Usar</h2>
-        <div class="grid-3">
-            <div class="box">
-                <div class="stat">6 Ejes</div>
-                <h3>34 Líneas Temáticas</h3>
-                <p>5 ejes disciplinares de ingeniería + 1 eje transversal de Inteligencia Artificial Aplicada e Innovación Digital.</p>
-            </div>
-            <div class="box">
-                <div class="stat">7 Ponentes</div>
-                <h3>4 Países Invitados</h3>
-                <p>Estados Unidos, México, Ecuador y Colombia con fotografía oficial, hoja de vida desplegable y título de conferencia.</p>
-            </div>
-            <div class="box">
-                <div class="stat">3 Jornadas</div>
-                <h3>15 Bloques Académicos</h3>
-                <p>Agenda oficial del 14, 15 y 16 de abril de 2027 por horario y auditorio, más descarga del PDF de Términos de Referencia.</p>
-            </div>
-        </div>
-        <div class="box" style="margin-top: 22px;">
-            <h3>Secciones adicionales integradas en portada</h3>
-            <p>Reloj regresivo en tiempo real · Tarifas oficiales conectadas a SGA Campus · Noticias y Comunicados · Comité Directivo y Científico · Galería Histórica (I, II y III CICI) · Universidades Aliadas · Preguntas Frecuentes (FAQ) y Mesa de Ayuda.</p>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 4: INTEGRANTE 2 - CONSULTA PÚBLICA POR CÉDULA -->
-    <section class="slide slide--light">
-        <span class="speaker-tag">🎙️ Integrante 2 · Experiencia del Postulante (RF-16)</span>
-        <h2>Consulta Pública de Estado solo con Número de Cédula</h2>
-        <p class="lead" style="color:#334155;">
-            El autor no necesita crear cuenta ni recordar contraseña: ingresa su número de documento en <code>/estado-resumen</code> y conoce al instante el dictamen del Comité Científico.
-        </p>
-        <div class="grid-3">
-            <div class="box">
-                <span class="badge-green" style="background:#059669;">Cédula: 1085200101</span>
-                <h3>Aprobado · Póster</h3>
-                <p>Muestra barra de progreso completada, puntaje (90/100), observaciones del comité y habilita el botón de descarga de <strong>Plantilla Oficial de Póster</strong>.</p>
-            </div>
-            <div class="box">
-                <span class="badge-green" style="background:#0284c7;">Cédula: 1085200202</span>
-                <h3>Aprobado · Ponencia Oral</h3>
-                <p>Informa aprobación en modalidad Ponencia Oral (puntaje 95/100) y enlaza al pago de inscripción en SGA Campus.</p>
-            </div>
-            <div class="box">
-                <span class="badge-green" style="background:#d97706;">Cédula: 1085200303</span>
-                <h3>En Revisión</h3>
-                <p>Indica que la propuesta fue recibida y se encuentra asignada a un par evaluador del Comité Científico.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 5: INTEGRANTE 2 - PANEL DEL COMITÉ CIENTÍFICO -->
-    <section class="slide">
-        <span class="speaker-tag">🎙️ Integrante 2 · Panel del Comité Científico (Demo en Vivo)</span>
-        <h2>Módulo de Evaluación del Comité Científico (<code>/comite/resumenes</code>)</h2>
-        <div class="grid-2">
-            <div class="box">
-                <h3>Funciones del Evaluador y Líder (<code>comite@cici.test</code>)</h3>
-                <ul>
-                    <li>Filtrado instantáneo por estado, eje temático, modalidad solicitada o búsqueda por cédula/título.</li>
-                    <li><strong>Regla de negocio validada:</strong> Para aprobar un resumen es obligatorio definir la modalidad final aprobada (<strong>Ponencia Oral</strong> o <strong>Póster</strong>).</li>
-                    <li>Registro de calificación numérica (0 a 100), comentarios visibles para el autor y notas internas privadas.</li>
-                </ul>
-            </div>
-            <div class="box">
-                <h3>Rol de Líder del Comité Científico</h3>
-                <ul>
-                    <li>Asignación de resúmenes a pares evaluadores según su especialidad e ingeniería.</li>
-                    <li>Creación de nuevos miembros del Comité Científico desde la plataforma.</li>
-                    <li>Registro automático de fecha de revisión y notificación al postulante.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 6: INTEGRANTE 3 - PANEL ADMINISTRATIVO Y RF-01 A RF-16 -->
-    <section class="slide slide--light">
-        <span class="speaker-tag">🎙️ Integrante 3 · Panel de Administración General (RF-01 a RF-16)</span>
-        <h2>Autoadministración Total sin Tocar Código (<code>/admin</code>)</h2>
-        <div class="grid-3">
-            <div class="box">
-                <h3>Académico y Agenda</h3>
-                <ul>
-                    <li><strong>Ponentes:</strong> Fotos, país, bio y charla.</li>
-                    <li><strong>Ejes y Subtemas:</strong> 6 ejes y 34 líneas.</li>
-                    <li><strong>Fechas y Programa:</strong> Bloques por día, hora y auditorio.</li>
-                </ul>
-            </div>
-            <div class="box">
-                <h3>Documentos y Difusión</h3>
-                <ul>
-                    <li><strong>Documentos (RF-07):</strong> Subida de PDFs o estado <em>«Próximamente»</em>.</li>
-                    <li><strong>Noticias (RF-08):</strong> Comunicados oficiales.</li>
-                    <li><strong>Tarifas (RF-06):</strong> Valores en COP.</li>
-                </ul>
-            </div>
-            <div class="box">
-                <h3>Institucional y Soporte</h3>
-                <ul>
-                    <li><strong>Comité, Galería y Aliados:</strong> Visibles en portada.</li>
-                    <li><strong>Preguntas Frecuentes (FAQ).</strong></li>
-                    <li><strong>Mesa de Ayuda (RF-13):</strong> Bandeja de mensajes recibidos.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 7: INTEGRANTE 3 - CAMBIO DE EDICIÓN 2027 A 2028 -->
-    <section class="slide">
-        <span class="speaker-tag">🎙️ Integrante 3 · Escalabilidad para Futuras Ediciones (Demo en Vivo)</span>
-        <h2>Transición de CICI 2027 a CICI 2028 y Cambio de Logos en 1 Clic</h2>
-        <p class="lead">
-            Diseñamos la plataforma pensando en la continuidad de la Universidad Mariana: cuando termine la edición 2027, el administrador puede actualizar el portal a <strong>CICI 2028 (V Edición)</strong> desde <code>/admin/configuracion</code>.
-        </p>
-        <div class="grid-2">
-            <div class="box">
-                <h3>¿Qué se actualiza desde el Panel Admin?</h3>
-                <ul>
-                    <li><strong>Año y Edición:</strong> Cambia automáticamente el año en la barra superior, títulos de sección, programa, pie de página y pestaña del navegador.</li>
-                    <li><strong>Reloj Regresivo:</strong> Se recalcula al instante con la nueva fecha ISO de 2028.</li>
-                </ul>
-            </div>
-            <div class="box">
-                <h3>Subida de Logos e Identidad Adaptativa</h3>
-                <ul>
-                    <li>Permite subir desde el navegador el nuevo <strong>Logo Blanco Principal</strong> y el <strong>Logo Sigla</strong>.</li>
-                    <li>Si se cambia el año a <strong>2028</strong> antes de diseñar un nuevo PNG, el banner adapta dinámicamente el emblema oficial para mostrar <strong>CICI 2028</strong>.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 8: INTEGRANTE 4 - ARQUITECTURA, RENDIMIENTO Y CERO BUGS -->
-    <section class="slide slide--light">
-        <span class="speaker-tag">🎙️ Integrante 4 · Arquitectura, Seguridad y Pruebas Automatizadas</span>
-        <h2>Calidad de Software: 34 Pruebas Automatizadas y Soporte para 2.000 Usuarios</h2>
-        <div class="grid-3">
-            <div class="box">
-                <div class="stat">16 Tablas</div>
-                <h3>Modelo Relacional</h3>
-                <p>Base de datos normalizada con llaves foráneas e índices compuestos en <code>submissions(document, status)</code> y agenda.</p>
-            </div>
-            <div class="box">
-                <div class="stat">2.000+</div>
-                <h3>Usuarios Concurrentes</h3>
-                <p>Caché inteligente (<code>PortalCache</code>) con invalidación automática al editar datos en el panel administrativo.</p>
-            </div>
-            <div class="box">
-                <div class="stat">34 Tests</div>
-                <h3>130 Aserciones (0 Bugs)</h3>
-                <p>Suite PHPUnit que verifica login, roles, dictamen de comité, consulta por cédula, módulos admin y cabeceras HTTP.</p>
-            </div>
-        </div>
-        <div class="box" style="margin-top: 22px;">
-            <h3>Despliegue Listo para la Nube (Render) y Servidor de la Universidad Mariana</h3>
-            <p>Contenedor Docker con autodetección de PostgreSQL/SQLite, ejecución automática de migraciones y <em>seeders</em> idempotentes (<code>updateOrCreate</code>) y documentación técnica completa con diagramas ERD y Sitemap.</p>
-        </div>
-    </section>
-
-    <!-- DIAPOSITIVA 9: DEMOSTRACIÓN EN VIVO (ORDEN DE PARTICIPACIÓN) -->
-    <section class="slide">
-        <span class="speaker-tag">🚀 Demostración en Vivo · Participación de los 4 Integrantes</span>
-        <h2>Guion Rápido para la Demostración en Vivo (5 Minutos)</h2>
-        <div class="grid-2">
-            <div class="box">
-                <h3>1️⃣ Integrante 1 (Portal Público)</h3>
-                <p>Muestra el banner animado, el contador, los 7 ponentes (Dr. Mauricio Alvarado Bueno), la agenda de los 3 días y abre el PDF de Términos de Referencia.</p>
-                <h3 style="margin-top:14px;">2️⃣ Integrante 2 (Cédula y Comité Científico)</h3>
-                <p>Consulta en <code>/estado-resumen</code> la cédula <code>1085200101</code> (Póster) y entra con <code>comite@cici.test</code> a <code>/comite/resumenes</code> para evaluar un resumen.</p>
-            </div>
-            <div class="box">
-                <h3>3️⃣ Integrante 3 (Panel Admin y Cambio a 2028)</h3>
-                <p>Entra con <code>admin@cici.test</code> a <code>/admin/configuracion</code>, pulsa <strong>«⚡ Autocompletar ejemplo CICI 2028»</strong>, guarda y muestra cómo toda la web pasa a 2028 (y la restaura a 2027).</p>
-                <h3 style="margin-top:14px;">4️⃣ Integrante 4 (Pruebas, BD y Despliegue)</h3>
-                <p>Muestra el Diagrama Entidad-Relación en la documentación, la ejecución de los 34 tests en verde y el despliegue activo en Render.</p>
-            </div>
-        </div>
-    </section>
-
+<div class="topbar">
+    <div class="topbar__title">
+        <span>CICI 2027 · Sustentación Final</span>
+        14 Diapositivas Profesionales (Formato 16:9 Widescreen · Listo para PDF tipo Canva o Pantalla Completa)
+    </div>
+    <div class="topbar__actions">
+        <button class="btn-ui" onclick="toggleMode()" id="modeBtn">🖥️ Modo Presentación (Pantalla Completa)</button>
+        <button class="btn-ui" onclick="prevSlide()">◀ Anterior</button>
+        <button class="btn-ui" onclick="nextSlide()">Siguiente ▶</button>
+        <button class="btn-ui btn-ui--primary" onclick="window.print()">📥 Descargar PDF (16:9 como Canva)</button>
+    </div>
 </div>
 
-<div class="controls">
-    <div class="progress" id="slideCounter">Diapositiva 1 de 9 · Usa las flechas ◀ ▶ del teclado</div>
-    <div class="controls__btns">
-        <button class="btn-nav" onclick="prevSlide()">◀ Anterior</button>
-        <button class="btn-nav" onclick="nextSlide()">Siguiente ▶</button>
-        <button class="btn-nav" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
-        <button class="btn-nav" onclick="window.print()">🖨️ Guardar PDF</button>
-    </div>
+<div class="slides-wrapper" id="slidesWrapper">
+
+    <!-- ==================== DIAPOSITIVA 1: PORTADA ==================== -->
+    <section class="slide slide--hero is-current">
+        <div class="slide__header">
+            <span class="presenter-pill">🏛️ Universidad Mariana · Facultad de Ingeniería · Ingeniería de Sistemas</span>
+            <div class="slide__brand-mini">San Juan de Pasto · 2026</div>
+        </div>
+        <div class="slide__body" style="align-items: center; text-align: center;">
+            <img src="../public/images/logo-blanco.png" alt="Logo CICI 2027" style="max-width: 470px; height: auto; margin-bottom: 18px; filter: drop-shadow(0 10px 24px rgba(0,0,0,0.3));">
+            <h1 style="font-size: 2.45rem; font-weight: 900; margin: 0 0 10px; line-height: 1.15;">
+                Plataforma Web Oficial Autoadministrable y Sistema de Arbitraje del Comité Científico — CICI 2027
+            </h1>
+            <p style="font-size: 1.08rem; max-width: 860px; margin: 0 auto 24px; opacity: .92;">
+                Desarrollo integral en <strong>Laravel 12 (Arquitectura MVC)</strong> sincronizado con <code>cici.umariana.edu.co</code>, con gestión completa de los 16 Requerimientos Funcionales, dictamen de modalidades (Ponencia Oral / Póster), consulta pública por cédula y transición interanual 2027 → 2028.
+            </p>
+            <div class="grid-4" style="width: 100%; text-align: left;">
+                <div class="card">
+                    <span class="tag tag--orange">Integrante 1</span>
+                    <h3>Contexto y Portal Público</h3>
+                    <p>Problemática, objetivos, identidad visual institucional propia y secciones oficiales.</p>
+                </div>
+                <div class="card">
+                    <span class="tag tag--green">Integrante 2</span>
+                    <h3>Comité y Consulta Cédula</h3>
+                    <p>Flujo de evaluación científica (Oral/Póster) y consulta sin contraseña (RF-16).</p>
+                </div>
+                <div class="card">
+                    <span class="tag">Integrante 3</span>
+                    <h3>Panel Admin y Edición 2028</h3>
+                    <p>Autoadministración de los 16 RF, subida de logos y cambio 2027 → 2028 en 1 clic.</p>
+                </div>
+                <div class="card">
+                    <span class="tag tag--orange">Integrante 4</span>
+                    <h3>Arquitectura, QA y Cloud</h3>
+                    <p>Modelo de 16 tablas, soporte para 2.000 usuarios, 34 tests automatizados y Render.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Sustentación de Proyecto Final · Ingeniería de Sistemas</span>
+            <span>Diapositiva 1 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 2: INTEGRANTE 1 - PROBLEMÁTICA Y JUSTIFICACIÓN ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__orb"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 1 · Planteamiento del Problema y Justificación</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>CICI 2027</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">1. Problemática Identificada en el Congreso CICI</h2>
+            <p class="slide__subtitle">
+                El Congreso Internacional de Ciencia e Ingeniería (CICI) de la Universidad Mariana requería evolucionar de una página informativa estática a un sistema de información académico, autoadministrable y escalable.
+            </p>
+            <div class="grid-2">
+                <div class="card card--accent-orange">
+                    <span class="tag tag--orange">Limitaciones del Esquema Anterior</span>
+                    <h3>Dependencia Técnica y Procesos Manuales</h3>
+                    <ul>
+                        <li><strong>Actualización manual en código HTML:</strong> Cualquier cambio en ponentes, horarios, auditorios, tarifas o enlaces obligaba a editar archivos fuente y redesplegar manualmente.</li>
+                        <li><strong>Ausencia de consulta en línea para autores:</strong> Quienes postulaban resúmenes no contaban con un buscador rápido por documento de identidad para verificar el estado de evaluación ni la modalidad asignada.</li>
+                        <li><strong>Falta de módulo para el Comité Científico:</strong> El registro de calificaciones, asignación de pares evaluadores y aprobación en modalidad <em>Ponencia Oral</em> o <em>Póster</em> se gestionaba fuera del portal.</li>
+                        <li><strong>Baja reutilización para futuras ediciones:</strong> Pasar de la edición 2027 a la edición 2028 implicaba reconstruir la interfaz y reemplazar textos fijos en múltiples vistas.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Solución Ingenieril Desarrollada</span>
+                    <h3>Plataforma Web Dinámica e Institucional</h3>
+                    <ul>
+                        <li><strong>100 % Autoadministrable por Roles:</strong> Panel exclusivo para el <em>Administrador General</em> (<code>/admin</code>) y para el <em>Comité Científico</em> (<code>/comite/resumenes</code>).</li>
+                        <li><strong>Consulta Pública por Cédula (<code>/estado-resumen</code>):</strong> Sin necesidad de crear cuenta ni recordar contraseña, el autor consulta su dictamen con su número de cédula.</li>
+                        <li><strong>Fidelidad Institucional Absoluta:</strong> Conserva la identidad gráfica oficial de la Universidad Mariana (no es una plantilla genérica), integrando los documentos reales como el PDF de <em>Términos de Referencia</em>.</li>
+                        <li><strong>Adaptabilidad 2027 → 2028 en 1 Clic:</strong> Permite actualizar el año, edición, fechas y logotipos institucionales desde el navegador.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Criterio de Rúbrica: Resolución satisfactoria de la problemática planteada</span>
+            <span>Diapositiva 2 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 3: INTEGRANTE 1 - OBJETIVOS Y ALCANCE ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__orb"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 1 · Objetivos y Alcance del Sistema</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>CICI 2027</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">2. Objetivos del Proyecto y Alcance Funcional</h2>
+            <div class="card card--accent-blue" style="margin-bottom: 18px;">
+                <span class="tag">Objetivo General</span>
+                <h3>Desarrollar e implementar la plataforma web oficial autoadministrable del IV Congreso Internacional de Ciencia e Ingeniería (CICI 2027) de la Universidad Mariana</h3>
+                <p>Integrando la divulgación académica oficial, la gestión dinámica de contenidos (RF-01 a RF-15), el módulo de evaluación del Comité Científico y la consulta pública de estado de resúmenes por documento de identidad (RF-16), bajo estándares de seguridad, usabilidad y alta concurrencia.</p>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="kpi">Obj. 1</div>
+                    <h3>Portal Institucional</h3>
+                    <p>Construir el portal público fiel a la imagen de la Universidad Mariana con los 6 ejes temáticos, 7 ponentes internacionales, agenda de 3 días y documentos oficiales.</p>
+                </div>
+                <div class="card">
+                    <div class="kpi">Obj. 2</div>
+                    <h3>Comité y Cédula</h3>
+                    <p>Implementar el flujo de arbitraje para el Comité Científico (aprobación Oral/Póster y puntaje) y la consulta pública instantánea por número de cédula.</p>
+                </div>
+                <div class="card">
+                    <div class="kpi">Obj. 3</div>
+                    <h3>CMS Administrativo</h3>
+                    <p>Dotar al administrador de paneles intuitivos para gestionar ponentes, ejes, fechas, programa, noticias, tarifas, FAQ, aliados y transición 2027 → 2028.</p>
+                </div>
+                <div class="card">
+                    <div class="kpi">Obj. 4</div>
+                    <h3>Calidad y Despliegue</h3>
+                    <p>Garantizar 0 errores mediante 34 pruebas automatizadas (PHPUnit), caché para 2.000 usuarios concurrentes y despliegue contenedorizado en Render.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Alcance acordado con la Facultad de Ingeniería: Integración con Google Forms y SGA Campus</span>
+            <span>Diapositiva 3 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 4: INTEGRANTE 1 - IDENTIDAD VISUAL PROPIA Y PORTAL PÚBLICO ==================== -->
+    <section class="slide slide--dark">
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 1 · Diseño Institucional Propio (No Genérico de IA)</span>
+            <div class="slide__brand-mini">Identidad Visual Universidad Mariana</div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">3. Identidad Visual Propia y Sincronización con cici.umariana.edu.co</h2>
+            <p class="slide__subtitle">
+                A diferencia de interfaces genéricas generadas por plantillas automáticas, la plataforma implementa una hoja de estilos propia (<code>public/css/cici.css</code>) basada en el manual de identidad del CICI y de la Universidad Mariana.
+            </p>
+            <div class="grid-3">
+                <div class="card">
+                    <span class="tag tag--orange">Paleta y Tipografía Oficial</span>
+                    <h3>Diseño Institucional A Medida</h3>
+                    <ul>
+                        <li><strong>Azul Mariano (<code>#0a2f66</code> / <code>#114e91</code>):</strong> Autoridad académica y rigor científico.</li>
+                        <li><strong>Verde Sostenibilidad (<code>#2fae7b</code>) y Naranja Innovación (<code>#f07019</code>):</strong> Acentos de los 3 pilares del logo oficial (Conocimiento, Innovación y Territorio).</li>
+                        <li><strong>Banner Hero Dinámico Sutil:</strong> Insignia con pulso en vivo, levitación suave del escudo y circuitos de ingeniería animados.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag tag--green">7 Ponentes Oficiales</span>
+                    <h3>Perfiles Académicos Reales</h3>
+                    <ul>
+                        <li><strong>Dr.Plinio Bariani</strong> (EE. UU.) · <strong>Dr. Horacio Flores</strong> (EE. UU. - Kansas State Univ.)</li>
+                        <li><strong>Dr. Mauricio Alvarado Bueno</strong> (Colombia - Univ. Santiago de Cali)</li>
+                        <li><strong>Dra. Cathy Guevara</strong> y <strong>Dr. Diego Trejo</strong> (Ecuador - UTN)</li>
+                        <li><strong>Dr. Samir Castilla</strong> y <strong>Dr. Marcial Reyes</strong> (México - UACJ / TecNM)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag">Agenda y Documentos Reales</span>
+                    <h3>3 Jornadas y PDF Oficial</h3>
+                    <ul>
+                        <li><strong>15 Bloques Horarios Publicados:</strong> Miércoles 14 (Apertura), Jueves 15 (Jornada Académica) y Viernes 16 de abril de 2027 (Cierre) con auditorios reales.</li>
+                        <li><strong>Términos de Referencia (PDF):</strong> Descarga directa habilitada en Inscripciones y Documentos, junto con Formato de Resumen y Material de Difusión.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Criterio de Rúbrica: Interfaz gráfica institucional auténtica y facilidad de uso</span>
+            <span>Diapositiva 4 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 5: INTEGRANTE 2 - CONSULTA PÚBLICA POR CÉDULA ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__orb"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 2 · Consulta Pública por Cédula (RF-16)</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Módulo de Postulantes</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">4. Consulta Pública de Estado solo con Número de Cédula</h2>
+            <p class="slide__subtitle">
+                Para garantizar la máxima facilidad de uso (<em>Usabilidad</em>), el postulante no necesita usuario ni contraseña: ingresa a <code>/estado-resumen</code>, digita su cédula y visualiza en tiempo real el dictamen del Comité Científico.
+            </p>
+            <div class="grid-3">
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Caso de Prueba 1 · Cédula 1085200101</span>
+                    <h3>Aprobado en Modalidad Póster</h3>
+                    <ul>
+                        <li><strong>Autora:</strong> Ing. Camila Andrea Rosero Burbano (Universidad Mariana).</li>
+                        <li><strong>Línea de tiempo en 3 pasos:</strong> 1. Recibido → 2. En evaluación → 3. Dictamen emitido.</li>
+                        <li><strong>Resultado:</strong> Muestra calificación (<strong>90/100</strong>), comentarios del evaluador y habilita el botón de descarga de la <strong>Plantilla Oficial de Póster</strong>.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-blue">
+                    <span class="tag">Caso de Prueba 2 · Cédula 1085200202</span>
+                    <h3>Aprobado en Ponencia Oral</h3>
+                    <ul>
+                        <li><strong>Autor:</strong> Mg. Juan Sebastián Delgado Pantoja (Universidad de Nariño).</li>
+                        <li><strong>Resultado:</strong> Informa aprobación para presentación en <strong>Ponencia Oral</strong> con calificación de <strong>95/100</strong>.</li>
+                        <li><strong>Acción directa:</strong> Muestra enlace directo al portal financiero SGA Campus para formalizar la inscripción del proyecto (hasta 7 autores).</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-orange">
+                    <span class="tag tag--orange">Caso de Prueba 3 · Cédula 1085200303</span>
+                    <h3>En Revisión por el Comité</h3>
+                    <ul>
+                        <li><strong>Autora:</strong> Ing. Diana Marcela Benavides (Universidad del Cauca).</li>
+                        <li><strong>Resultado:</strong> Muestra la barra de progreso en la etapa 2 (<em>En evaluación por el Comité Científico</em>), brindando transparencia sobre el estado del trámite.</li>
+                        <li><strong>Búsqueda dual:</strong> Funciona tanto por número de cédula como por código de radicado (<code>CICI-2027-XXXX</code>).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Controlador: App\Http\Controllers\SubmissionStatusController · Vista: submissions/status.blade.php</span>
+            <span>Diapositiva 5 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 6: INTEGRANTE 2 - PANEL DEL COMITÉ CIENTÍFICO ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__orb"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 2 · Panel del Comité Científico (/comite/resumenes)</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Evaluación por Pares</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">5. Flujo de Trabajo y Arbitraje del Comité Científico</h2>
+            <p class="slide__subtitle">
+                El sistema diferencia entre el <strong>Líder del Comité Científico</strong> (<code>comite@cici.test</code>) y los <strong>Pares Evaluadores</strong> (<code>evaluador@cici.test</code>), protegiendo las rutas con el middleware <code>IsCommittee</code>.
+            </p>
+            <div class="grid-2">
+                <div class="card card--accent-blue">
+                    <span class="tag">Funciones de Evaluación Académica</span>
+                    <h3>Dictamen Riguroso y Modalidades</h3>
+                    <ul>
+                        <li><strong>Tablero con KPIs en vivo:</strong> Total de resúmenes, pendientes, en revisión, aprobados (desglosados en Orales y Pósteres) y rechazados.</li>
+                        <li><strong>Filtros combinados:</strong> Por estado, eje temático, modalidad solicitada, asignación o búsqueda por cédula/nombre/título.</li>
+                        <li><strong>Regla de negocio obligatoria:</strong> Al marcar un resumen como <em>Aprobado</em>, el sistema exige seleccionar si se aprueba como <strong>Ponencia Oral</strong> o como <strong>Póster</strong>; si se rechaza, limpia automáticamente la modalidad.</li>
+                        <li><strong>Retroalimentación transparente:</strong> Lo que el evaluador escribe en <em>Observaciones para el autor</em> aparece inmediatamente cuando el postulante consulta con su cédula.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Funciones Exclusivas del Líder y Admin</span>
+                    <h3>Coordinación por Ejes Temáticos</h3>
+                    <ul>
+                        <li><strong>Asignación de Evaluadores:</strong> El Líder del Comité Científico asigna cada resumen recibido al profesor evaluador experto en ese eje temático.</li>
+                        <li><strong>Gestión de Integrantes del Comité:</strong> Permite registrar nuevos profesores evaluadores asociándolos a uno de los 6 ejes temáticos oficiales del congreso.</li>
+                        <li><strong>Trazabilidad de Auditoría:</strong> La tabla <code>submissions</code> registra quién evaluó (<code>reviewed_by</code>), la fecha exacta del dictamen (<code>reviewed_at</code>) y la fecha de notificación (<code>notified_at</code>).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Controlador: App\Http\Controllers\Committee\CommitteeSubmissionController</span>
+            <span>Diapositiva 6 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 7: INTEGRANTE 3 - MATRIZ RF-01 A RF-08 ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 3 · Cumplimiento de Requerimientos (RF-01 a RF-08)</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Trazabilidad Parte 1</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">6. Especificación y Cumplimiento de Requerimientos (RF-01 a RF-08)</h2>
+            <table class="slide-table">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">Código</th>
+                        <th style="width: 260px;">Requerimiento Funcional</th>
+                        <th>Implementación Técnica en la Plataforma</th>
+                        <th style="width: 110px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RF-01</strong></td>
+                        <td>Información general e identidad del Congreso</td>
+                        <td>Modelo <code>CongressSetting</code> y panel <code>/admin/configuracion</code>: edita nombre, año (2027↔2028), insignia, fechas, modalidad y logos.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-02</strong></td>
+                        <td>Gestión de Ejes y Líneas Temáticas</td>
+                        <td>Modelos <code>ThematicAxis</code> y <code>AxisTopic</code> (<code>/admin/ejes</code>): administra los 6 ejes oficiales (incluido el transversal de IA) y sus 34 subtemas.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-03</strong></td>
+                        <td>Cronograma de Fechas Importantes</td>
+                        <td>Modelo <code>ImportantDate</code> (<code>/admin/fechas</code>) + contador regresivo en tiempo real en portada sincronizado con <code>event_start_iso</code>.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-04</strong></td>
+                        <td>Programa y Agenda Académica</td>
+                        <td>Modelo <code>ScheduleItem</code> (<code>/admin/programa</code>): gestiona los 15 bloques oficiales de los días 14, 15 y 16 de abril por hora, conferencista y auditorio.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-05</strong></td>
+                        <td>Directorio de Ponentes Invitados</td>
+                        <td>Modelo <code>Speaker</code> (<code>/admin/ponentes</code>): CRUD con subida de fotografía, país, institución, perfil académico y título de ponencia.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-06</strong></td>
+                        <td>Modalidades de Participación y Tarifas</td>
+                        <td>Modelo <code>RegistrationFee</code> (<code>/admin/configuracion</code>): administra las 4 tarifas oficiales en COP y condiciones de hasta 7 autores por proyecto.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-07</strong></td>
+                        <td>Descarga de Documentos y Plantillas</td>
+                        <td>Modelo <code>CongressDocument</code> (<code>/admin/documentos</code>): gestiona PDF de Términos de Referencia, Formato de Resumen, Banners y estados <em>«Próximamente»</em>.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-08</strong></td>
+                        <td>Publicación de Noticias y Novedades</td>
+                        <td>Modelo <code>NewsPost</code> (<code>/admin/noticias</code>): CRUD de comunicados oficiales con categoría, resumen, imagen y enlace externo.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slide__footer">
+            <span>Todos los módulos cuentan con migración, modelo Eloquent, controlador, vista administrativa y vista pública</span>
+            <span>Diapositiva 7 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 8: INTEGRANTE 3 - MATRIZ RF-09 A RF-16 ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 3 · Cumplimiento de Requerimientos (RF-09 a RF-16)</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Trazabilidad Parte 2</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">7. Especificación y Cumplimiento de Requerimientos (RF-09 a RF-16)</h2>
+            <table class="slide-table">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">Código</th>
+                        <th style="width: 260px;">Requerimiento Funcional</th>
+                        <th>Implementación Técnica en la Plataforma</th>
+                        <th style="width: 110px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RF-09</strong></td>
+                        <td>Comité Organizador, Directivo y Científico</td>
+                        <td>Modelo <code>OrganizerMember</code> (<code>/admin/contenido-portal</code>): administra los integrantes directivos, científicos y organizadores visibles en <code>#comite</code>.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-10</strong></td>
+                        <td>Galería e Histórico de Ediciones Anteriores</td>
+                        <td>Modelo <code>GalleryItem</code> (<code>/admin/contenido-portal</code>): memoria histórica del I CICI (2021), II CICI (2023) y III CICI (2025) con métricas de asistentes y ponencias.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-11</strong></td>
+                        <td>Aliados e Instituciones Participantes</td>
+                        <td>Modelo <code>Sponsor</code> (<code>/admin/contenido-portal</code>): directorio de universidades participantes (Universidad Mariana, UTN, Kansas State, UACJ, TecNM, USC).</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-12</strong></td>
+                        <td>Preguntas Frecuentes (FAQ)</td>
+                        <td>Modelo <code>Faq</code> (<code>/admin/contenido-portal</code>): preguntas y respuestas desplegables sobre postulación, consulta por cédula, pagos y certificados.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-13</strong></td>
+                        <td>Canales de Contacto y Mesa de Ayuda</td>
+                        <td>Modelo <code>ContactMessage</code>: formulario público en <code>#contacto</code> con validación y bandeja administrativa en <code>/admin/mensajes</code> para responder consultas.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-14</strong></td>
+                        <td>Integración con Plataforma de Pagos SGA Campus</td>
+                        <td>Enlace configurable (<code>registration_url</code>) conectado al portal oficial de inscripciones financieras SGA Campus de la Universidad Mariana.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-15</strong></td>
+                        <td>Panel de Administración General</td>
+                        <td>Dashboard centralizado en <code>/admin</code> protegido por autenticación y middleware <code>IsAdmin</code> con indicadores en tiempo real y accesos directos.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>RF-16</strong></td>
+                        <td>Flujo Comité Científico y Consulta por Cédula</td>
+                        <td>Modelo <code>Submission</code>, panel de arbitraje en <code>/comite/resumenes</code> y buscador público instantáneo por documento de identidad en <code>/estado-resumen</code>.</td>
+                        <td><span class="tag tag--green">100% Cumplido</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slide__footer">
+            <span>Cobertura funcional verificada: 16 de 16 Requerimientos Funcionales (100 %)</span>
+            <span>Diapositiva 8 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 9: INTEGRANTE 3 - CAMBIO DE EDICIÓN 2027 A 2028 ==================== -->
+    <section class="slide slide--dark">
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 3 · Escalabilidad Interanual (2027 → 2028)</span>
+            <div class="slide__brand-mini">Sostenibilidad Tecnológica</div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">8. Transición Completa de 2027 a 2028 y Subida de Logos desde Admin</h2>
+            <p class="slide__subtitle">
+                Para que la Universidad Mariana reutilice la plataforma en <strong>CICI 2028 (V Edición)</strong> y años posteriores sin depender de programadores, diseñamos un motor de identidad dinámica en <code>/admin/configuracion</code>.
+            </p>
+            <div class="grid-3">
+                <div class="card">
+                    <span class="tag tag--orange">1. Botón de Previsualización 2028</span>
+                    <h3>Cambio Instantáneo en 1 Clic</h3>
+                    <ul>
+                        <li>Incluye el botón rápido <strong>«⚡ Autocompletar ejemplo CICI 2028 (V Edición)»</strong> para demostrar en vivo la transición completa.</li>
+                        <li>Actualiza simultáneamente la barra de navegación, el título del navegador, el banner principal, las 3 tarjetas de jornadas del programa, inscripciones, documentos y pie de página.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag tag--green">2. Subida de Nuevos Logos</span>
+                    <h3>Gestión de Archivos Gráficos</h3>
+                    <ul>
+                        <li>El administrador puede subir un nuevo <strong>Logo Principal Blanco</strong> (PNG/SVG/WebP) para el Banner y el Footer, y un nuevo <strong>Logo Sigla</strong> para la barra superior.</li>
+                        <li>Se almacenan directamente en <code>public/images/custom/</code> para que funcionen en cualquier servidor sin depender de enlaces simbólicos.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag">3. Emblema Dinámico Inteligente</span>
+                    <h3>Adaptación Automática del Año</h3>
+                    <ul>
+                        <li>Como la imagen original <code>logo-blanco.png</code> tiene dibujado el número <code>2027</code> en sus píxeles, si el administrador cambia el año a <code>2028</code> sin subir aún un PNG nuevo, el sistema genera automáticamente el bloque de identidad oficial con la sigla CICI + <strong>2028</strong> + <em>V Congreso Internacional...</em></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Controlador: App\Http\Controllers\Admin\CongressSettingController</span>
+            <span>Diapositiva 9 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 10: INTEGRANTE 4 - ARQUITECTURA DE SOFTWARE ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__orb"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 4 · Arquitectura de Software y Seguridad</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Arquitectura MVC</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">9. Arquitectura en Capas (Laravel 12 MVC + Caché + Seguridad)</h2>
+            <div class="grid-4" style="margin-bottom: 18px;">
+                <div class="card card--accent-blue">
+                    <span class="tag">Capa 1 · Presentación</span>
+                    <h3>Vistas Blade y CSS</h3>
+                    <ul>
+                        <li>Plantillas modulares (<code>layouts/cici</code>, <code>navbar</code>, <code>footer</code>).</li>
+                        <li>Diseño responsive móvil/escritorio en <code>cici.css</code>.</li>
+                        <li>Formularios protegidos con tokens <code>@csrf</code>.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Capa 2 · Seguridad HTTP</span>
+                    <h3>Middlewares Activos</h3>
+                    <ul>
+                        <li><code>IsAdmin</code>: Protege todas las rutas <code>/admin/*</code>.</li>
+                        <li><code>IsCommittee</code>: Protege <code>/comite/*</code>.</li>
+                        <li><code>SecurityHeaders</code>: Inyecta <code>X-Frame-Options</code>, <code>nosniff</code> y <code>Referrer-Policy</code>.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-orange">
+                    <span class="tag tag--orange">Capa 3 · Negocio y Caché</span>
+                    <h3>Controladores y Caché</h3>
+                    <ul>
+                        <li>14 Controladores especializados (Públicos, Comité y Admin).</li>
+                        <li><code>PortalCache</code>: Consolida la carga de portada en caché con invalidación automática por eventos.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-blue">
+                    <span class="tag">Capa 4 · Datos (ORM)</span>
+                    <h3>Eloquent y Motor SQL</h3>
+                    <ul>
+                        <li>15 Modelos Eloquent con relaciones tipadas.</li>
+                        <li>Compatible al 100 % con <strong>PostgreSQL</strong> (Render/Producción) y <strong>SQLite</strong> (Local).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="background: #0a2f66; color: #fff;">
+                <h3 style="color: #fff;">¿Cómo soporta la plataforma picos de 2.000 personas inscritas concurrentes?</h3>
+                <p style="color: rgba(255,255,255,0.9);">
+                    1) La portada pública se sirve desde <code>PortalCache</code> en memoria sin repetir las 12 consultas SQL en cada visita, y <code>AppServiceProvider</code> limpia la caché automáticamente en el instante en que el Admin edita cualquier dato. 2) La migración <code>2026_10_20_110000</code> añade índices compuestos en <code>submissions(document, status)</code> para que la consulta por cédula responda en menos de 5 milisegundos.
+                </p>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Arquitectura desacoplada, mantenible y alineada con buenas prácticas PSR-12</span>
+            <span>Diapositiva 10 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 11: INTEGRANTE 4 - MODELO ENTIDAD RELACIÓN (16 TABLAS) ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 4 · Modelo de Base de Datos (16 Tablas)</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Diseño de Datos</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">10. Estructura de la Base de Datos Relacional (16 Tablas)</h2>
+            <p class="slide__subtitle">
+                El esquema de base de datos está organizado en 4 dominios cohesivos con integridad referencial (llaves foráneas con <code>cascadeOnDelete</code> y <code>nullOnDelete</code>):
+            </p>
+            <div class="grid-4">
+                <div class="card card--accent-blue">
+                    <span class="tag">Dominio 1 · Usuarios y Roles</span>
+                    <h3>Seguridad y Accesos</h3>
+                    <ul>
+                        <li><strong><code>users</code>:</strong> Almacena Administrador (<code>is_admin</code>), Líder de Comité (<code>is_committee_leader</code>) y Evaluadores (<code>is_committee</code>, <code>thematic_axis_id</code>).</li>
+                        <li><strong><code>sessions</code> / <code>cache</code> / <code>jobs</code>:</strong> Tablas de infraestructura del framework.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Dominio 2 · Arbitraje (RF-16)</span>
+                    <h3>Resúmenes y Dictamen</h3>
+                    <ul>
+                        <li><strong><code>submissions</code>:</strong> Radicado único (<code>tracking_code</code>), documento indexado (<code>document</code>), datos del autor, coautores, <code>thematic_axis_id</code>, <code>axis_topic_id</code>, <code>requested_modality</code>, <code>status</code>, <code>modality</code> aprobada (Oral/Póster), <code>score</code> y auditoría.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-orange">
+                    <span class="tag tag--orange">Dominio 3 · Núcleo Académico</span>
+                    <h3>Ejes, Ponentes y Agenda</h3>
+                    <ul>
+                        <li><strong><code>thematic_axes</code> (6 ejes)</strong> Relación 1:N con <strong><code>axis_topics</code> (34 subtemas)</strong>.</li>
+                        <li><strong><code>speakers</code> (7 ponentes):</strong> Fotos con resolución inteligente local/storage.</li>
+                        <li><strong><code>important_dates</code>:</strong> Hitos del congreso.</li>
+                        <li><strong><code>schedule_items</code>:</strong> 15 bloques horarios.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-blue">
+                    <span class="tag">Dominio 4 · Módulos Portal</span>
+                    <h3>CMS Institucional</h3>
+                    <ul>
+                        <li><strong><code>congress_settings</code>:</strong> Parámetros clave-valor (año, logos, enlaces).</li>
+                        <li><strong><code>registration_fees</code>:</strong> Tarifas COP.</li>
+                        <li><strong><code>congress_documents</code>:</strong> PDFs y plantillas.</li>
+                        <li><strong><code>news_posts</code>, <code>organizer_members</code>, <code>gallery_items</code>, <code>sponsors</code>, <code>faqs</code>, <code>contact_messages</code>.</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>12 migraciones versionadas en database/migrations/ y 6 Seeders idempotentes con updateOrCreate()</span>
+            <span>Diapositiva 11 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 12: INTEGRANTE 4 - PRUEBAS AUTOMATIZADAS Y DESPLIEGUE RENDER ==================== -->
+    <section class="slide slide--light">
+        <div class="slide__deco-top"></div>
+        <div class="slide__header">
+            <span class="presenter-pill">🎙️ Expositor: Integrante 4 · Pruebas Automatizadas (0 Bugs) y Despliegue Cloud</span>
+            <div class="slide__brand-mini"><img src="../public/images/cici-sigla.png" alt="CICI"> <span>Calidad y DevOps</span></div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">11. Verificación de Calidad (34 Tests) y Despliegue en Render</h2>
+            <div class="grid-2">
+                <div class="card card--accent-green">
+                    <span class="tag tag--green">Cero Errores Evidentes · 34 Tests / 130 Aserciones</span>
+                    <h3>Suite de Pruebas Automatizadas (PHPUnit)</h3>
+                    <ul>
+                        <li><strong>Pruebas de Autenticación y Seguridad (24 tests):</strong> Inicio de sesión, bloqueo de credenciales inválidas, recuperación de clave, perfil y cabeceras HTTP seguras.</li>
+                        <li><strong>Pruebas del Comité Científico y Cédula (6 tests):</strong> Envío de resumen, bloqueo a usuarios sin rol, obligatoriedad de elegir modalidad Oral o Póster al aprobar, limpieza al rechazar y consulta pública solo con cédula.</li>
+                        <li><strong>Pruebas de Módulos Administrativos y Caché (4 tests):</strong> Creación de líderes de comité, CRUD de programa/documentos/noticias/tarifas, formulario de contacto e invalidación automática de <code>PortalCache</code>.</li>
+                    </ul>
+                </div>
+                <div class="card card--accent-blue">
+                    <span class="tag">Infraestructura Docker y Render.com</span>
+                    <h3>Despliegue Automatizado sin Fricción</h3>
+                    <ul>
+                        <li><strong><code>Dockerfile</code> Multietapa:</strong> Compila dependencias Composer (PHP 8.4 + Apache) y activos frontend Vite (Node 22) en una imagen lista para producción.</li>
+                        <li><strong><code>docker/entrypoint.sh</code> Inteligente:</strong> Detecta automáticamente si existe <code>DB_URL</code> (PostgreSQL en Render) o si debe operar con SQLite, ejecuta migraciones y corre los <em>seeders</em> oficiales.</li>
+                        <li><strong>Autoprotección en Login y Portada:</strong> Si la base de datos en la nube está recién creada, el sistema garantiza automáticamente las cuentas <code>admin@cici.test</code> y <code>comite@cici.test</code>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Criterio de Rúbrica: Ausencia de errores (bugs) evidentes y facilidad de despliegue institucional</span>
+            <span>Diapositiva 12 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 13: GUION DE DEMOSTRACIÓN EN VIVO PARA LOS 4 INTEGRANTES ==================== -->
+    <section class="slide slide--dark">
+        <div class="slide__header">
+            <span class="presenter-pill">🚀 Demostración en Vivo · Participación Equitativa de los 4 Integrantes</span>
+            <div class="slide__brand-mini">Paso a Paso frente al Jurado</div>
+        </div>
+        <div class="slide__body">
+            <h2 class="slide__title">12. Orden de la Demostración en Vivo del Software</h2>
+            <p class="slide__subtitle">
+                Cada integrante realiza una demostración práctica en vivo para evidenciar el dominio completo del sistema ante el jurado:
+            </p>
+            <div class="grid-4">
+                <div class="card">
+                    <span class="tag tag--orange">Paso 1 · Integrante 1</span>
+                    <h3>Portal Público Oficial</h3>
+                    <ul>
+                        <li>Muestra el banner animado y el contador regresivo.</li>
+                        <li>Recorre los 6 ejes y los 7 ponentes (abre el perfil del Dr. Mauricio Alvarado Bueno).</li>
+                        <li>Despliega las 3 jornadas del programa y abre el <strong>PDF de Términos de Referencia</strong>.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag tag--green">Paso 2 · Integrante 2</span>
+                    <h3>Cédula y Comité</h3>
+                    <ul>
+                        <li>En <code>/estado-resumen</code> consulta la cédula <code>1085200101</code> (Aprobado Póster) y <code>1085200202</code> (Oral).</li>
+                        <li>Inicia sesión como <code>comite@cici.test</code> en <code>/comite/resumenes</code> y aprueba el resumen <code>1085200303</code> asignándole modalidad y puntaje.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag">Paso 3 · Integrante 3</span>
+                    <h3>Admin y Cambio a 2028</h3>
+                    <ul>
+                        <li>Inicia sesión como <code>admin@cici.test</code> en <code>/admin</code> y muestra los módulos RF-01 a RF-16.</li>
+                        <li>En <code>/admin/configuracion</code> pulsa <strong>«⚡ Autocompletar ejemplo CICI 2028»</strong>, guarda y muestra cómo toda la web cambia a 2028 (y la restaura a 2027).</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="tag tag--orange">Paso 4 · Integrante 4</span>
+                    <h3>Pruebas, BD y Nube</h3>
+                    <ul>
+                        <li>Muestra el Diagrama Entidad-Relación de las 16 tablas en la documentación.</li>
+                        <li>Muestra en terminal los <strong>34 tests pasando en verde</strong> y el portal desplegado en vivo en <strong>Render</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide__footer">
+            <span>Criterio de Rúbrica: Se evidencia la participación activa de todos los integrantes del equipo</span>
+            <span>Diapositiva 13 / 14</span>
+        </div>
+    </section>
+
+    <!-- ==================== DIAPOSITIVA 14: CONCLUSIONES Y CIERRE ==================== -->
+    <section class="slide slide--hero">
+        <div class="slide__header">
+            <span class="presenter-pill">🎓 Conclusiones y Cierre · Equipo de Desarrollo CICI 2027</span>
+            <div class="slide__brand-mini">Universidad Mariana</div>
+        </div>
+        <div class="slide__body" style="align-items: center; text-align: center;">
+            <img src="../public/images/logo-blanco.png" alt="Logo CICI 2027" style="max-width: 360px; height: auto; margin-bottom: 14px;">
+            <h2 style="font-size: 2.3rem; font-weight: 900; margin: 0 0 16px;">Conclusiones e Impacto para la Facultad de Ingeniería</h2>
+            <div class="grid-3" style="width: 100%; text-align: left; margin-bottom: 22px;">
+                <div class="card">
+                    <span class="tag tag--green">100 % de Cumplimiento</span>
+                    <h3>16 de 16 Requerimientos</h3>
+                    <p>El software resuelve integralmente la necesidad de la Facultad de Ingeniería, unificando divulgación oficial, arbitraje del Comité Científico y consulta pública por cédula.</p>
+                </div>
+                <div class="card">
+                    <span class="tag tag--orange">Sostenibilidad 2027 → 2028</span>
+                    <h3>Cero Dependencia de Código</h3>
+                    <p>El Comité Organizador puede actualizar ponentes, agenda, PDFs, tarifas, logos y cambiar de edición anual directamente desde el navegador.</p>
+                </div>
+                <div class="card">
+                    <span class="tag">Calidad Verificada</span>
+                    <h3>Listo para Producción</h3>
+                    <p>Respaldado por 34 pruebas automatizadas, arquitectura de caché para 2.000 usuarios concurrentes, contenedor Docker y documentación técnica completa.</p>
+                </div>
+            </div>
+            <p style="font-size: 1.25rem; font-weight: 900; color: #ffd0b0; margin: 0;">
+                ¡Muchas gracias al jurado evaluador! Quedamos atentos a sus preguntas y a la demostración en vivo.
+            </p>
+        </div>
+        <div class="slide__footer">
+            <span>Plataforma Web Oficial CICI 2027 · Facultad de Ingeniería · Universidad Mariana</span>
+            <span>Diapositiva 14 / 14</span>
+        </div>
+    </section>
+
 </div>
 
 <script>
     const slides = Array.from(document.querySelectorAll('.slide'));
-    const counter = document.getElementById('slideCounter');
     let current = 0;
+    let presentationMode = false;
 
-    function showSlide(index) {
-        if (index < 0) index = 0;
-        if (index >= slides.length) index = slides.length - 1;
-        slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
-        current = index;
-        counter.textContent = `Diapositiva ${current + 1} de ${slides.length} · Usa las flechas ◀ ▶ del teclado`;
-    }
-    function nextSlide() { showSlide(current + 1); }
-    function prevSlide() { showSlide(current - 1); }
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            document.exitFullscreen();
+    function updateSlide(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= slides.length) idx = slides.length - 1;
+        current = idx;
+        slides.forEach((s, i) => s.classList.toggle('is-current', i === current));
+        if (!presentationMode) {
+            slides[current].scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
+
+    function nextSlide() { updateSlide(current + 1); }
+    function prevSlide() { updateSlide(current - 1); }
+
+    function toggleMode() {
+        presentationMode = !presentationMode;
+        document.body.classList.toggle('presentation-mode', presentationMode);
+        const btn = document.getElementById('modeBtn');
+        btn.textContent = presentationMode ? '📄 Ver Todas las Diapositivas' : '🖥️ Modo Presentación (Pantalla Completa)';
+        if (presentationMode && !document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else if (!presentationMode && document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+    }
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
             e.preventDefault();
@@ -492,6 +1124,10 @@
         } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
             e.preventDefault();
             prevSlide();
+        } else if (e.key === 'Escape' && presentationMode) {
+            presentationMode = false;
+            document.body.classList.remove('presentation-mode');
+            document.getElementById('modeBtn').textContent = '🖥️ Modo Presentación (Pantalla Completa)';
         }
     });
 </script>
